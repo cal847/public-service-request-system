@@ -195,3 +195,38 @@
   load();
   apply();
 })();
+
+/* ---------- Dark mode ---------- */
+(function () {
+  var KEY = 'mcps-theme';
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var icon = btn.querySelector('.material-symbols-outlined');
+
+  function apply(theme) {
+    var dark = theme === 'dark';
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    icon.textContent = dark ? 'light_mode' : 'dark_mode';
+  }
+
+  apply(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+  btn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+
+  /* Follow the system setting until the visitor picks a theme themselves */
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      var saved = null;
+      try { saved = localStorage.getItem(KEY); } catch (err) {}
+      if (!saved) apply(e.matches ? 'dark' : 'light');
+    });
+  }
+})();

@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    try {
+      var t = localStorage.getItem('mcps-theme');
+      if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Murang'a County Public Services</title>
@@ -37,7 +44,12 @@
           </svg>
           <a class="contact-text contact-link" href="tel:+254757562988">+254 757 562 988</a>
         </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+          <span class="material-symbols-outlined icon" aria-hidden="true">dark_mode</span>
+        </button>
       </div>
+
+      
 
       <div class="top-actions">
         <div class="a11y" id="a11y">
@@ -93,7 +105,7 @@
 
     <nav class="main-nav" id="mainNav" aria-label="Main">
       <a href="#" aria-current="page">Home</a>
-      <a href="#">About</a>
+      <a href="#about">About</a>
       <a href="#">Quick Links</a>
       <a href="#">Help &amp; Support</a>
     </nav>
@@ -177,8 +189,147 @@
     </div>
   </main>
 
-  
+    <!-- ========== About ========== -->
+  <section class="about" id="about" aria-labelledby="aboutTitle">
+    <div class="about-head">
+      <h2 id="aboutTitle">About This Portal</h2>
+      <p>
+        The Murang'a County Public Services Portal brings county services together in one place,
+        so residents can find what they need, apply, and get help without going from office to office.
+      </p>
+    </div>
 
+    <div class="about-grid">
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">hub</span></span>
+        <h3>One Portal, Many Services</h3>
+        <p>Business permits, liquor licenses, building permits, land, property, parking and health services are all listed on the home page.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">edit_document</span></span>
+        <h3>Apply Online</h3>
+        <p>Start your application from your phone or computer through the county's online services, whenever it suits you.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">search</span></span>
+        <h3>Find Services Fast</h3>
+        <p>Use the search icon to look up a service by name. If we don't offer it, the portal tells you straight away.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">accessibility_new</span></span>
+        <h3>Accessible to Everyone</h3>
+        <p>Change the text size, contrast, spacing, font and more from the accessibility button at the top of the page.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">phone_in_talk</span></span>
+        <h3>Help When You Need It</h3>
+        <p>Ambulance, call centre and fire hotline numbers are always at the bottom of the page, along with our email addresses.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">volunteer_activism</span></span>
+        <h3>Built for Residents</h3>
+        <p>We aim to serve the people of Murang'a with integrity, and to make county services accountable, efficient and effective.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-col footer-about">
+        <h2 class="footer-title">Murang'a County</h2>
+        <p>
+          At Murang'a County, we are dedicated to transform the livelihood of the people of
+          Murang’a county on a foundation of integrity through accountable, efficient and
+          effective leadership.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Social Info</h2>
+        <ul class="social-list">
+          <li>
+            <a href="#" aria-label="Murang'a County on Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.5-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.2-.2-2.2-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.5v3H11V21h2.5z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="#" aria-label="Murang'a County on X">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-6l-4.7-6.2L5.6 21h-3l7-8.1L2.3 3h6.1l4.2 5.6L17.5 3zm-1 16.2h1.7L7.6 4.7H5.8l10.7 14.5z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="#" aria-label="Murang'a County on YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Quick Links</h2>
+        <ul class="footer-links">
+          <li><a href="https://apply.muranga.go.ke/">Job Application Portal</a></li>
+          <li><a href="https://lands.muranga.go.ke/">Lands Services</a></li>
+          <li><a href="https://eservices.muranga.go.ke/">SBP Licenses</a></li>
+          <li><a href="https://eservices.muranga.go.ke/">Liquor Licenses</a></li>
+          <li><a href="https://cp-34.webhostbox.net:2096/">Staff Emails</a></li>
+          <li><a href="https://ecitizen.muranga.go.ke/">E-Services</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Get In Touch</h2>
+        <ul class="footer-contact">
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+            <span>P.O Box 52 - 10200 Murang'a</span>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">call</span>
+            <a href="tel:+254757562988">+254 757 562 988</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+            <a href="mailto:info@muranga.go.ke">info@muranga.go.ke</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+            <a href="mailto:complain@muranga.go.ke">complain@muranga.go.ke</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Quick Contacts</h2>
+        <ul class="quick-contacts">
+          <li>
+            <span class="qc-label">Ambulance</span>
+            <a href="tel:+254716017296"><span class="material-symbols-outlined" aria-hidden="true">call</span> 0716 017 296</a>
+          </li>
+          <li>
+            <span class="qc-label">Call Center</span>
+            <a href="tel:+254757562988"><span class="material-symbols-outlined" aria-hidden="true">call</span> 0757 562 988</a>
+          </li>
+          <li>
+            <span class="qc-label">Fire Hotline</span>
+            <a href="tel:0800721800"><span class="material-symbols-outlined" aria-hidden="true">call</span> 080 072 1800</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 - 2027 </p>
+    </div>
+  </footer>
 
   <script src="./index.js"></script>
 </body>
