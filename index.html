@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Murang'a County Public Services</title>
+  <style>
+    /* ── Reset & Base ────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-primary: #1a6b3c;
+      --green-dark:    #145a30;
+      --green-light:   #e8f5ec;
+      --green-accent:  #218c4e;
+      --white:         #ffffff;
+      --gray-100:      #f8f9fa;
+      --gray-200:      #e9ecef;
+      --gray-400:      #adb5bd;
+      --gray-600:      #6c757d;
+      --gray-800:      #343a40;
+      --gray-900:      #212529;
+      --purple-accent: #8b5cf6;
+      --radius:        10px;
+      --shadow-sm:     0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:     0 4px 14px rgba(0,0,0,.10);
+      --transition:    .25s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--gray-900);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Top Bar ──────────────────────────────────────── */
+    .top-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 14px 0;
+    }
+
+    .top-bar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      width: 62px;
+      height: 62px;
+      border-radius: 10px;
+      border: 2.5px solid var(--green-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .logo-badge svg { width: 44px; height: 44px; }
+
+    .logo-text {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      color: var(--gray-900);
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .logo-text span { color: var(--green-primary); }
+
+    .top-contacts {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--gray-800);
+    }
+
+    .contact-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--green-primary);
+      flex-shrink: 0;
+    }
+
+    .contact-item a {
+      color: var(--gray-800);
+      transition: color var(--transition);
+    }
+    .contact-item a:hover { color: var(--green-primary); }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .a11y-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gray-200);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+    }
+    .a11y-btn:hover {
+      border-color: var(--green-primary);
+      background: var(--green-light);
+    }
+    .a11y-btn svg { width: 22px; height: 22px; color: var(--gray-800); }
+
+    .signin-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 50px;
+      border: 1.5px solid var(--gray-200);
+      background: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+      transition: all var(--transition);
+    }
+    .signin-btn:hover {
+      border-color: var(--green-primary);
+      background: var(--green-light);
+      color: var(--green-primary);
+    }
+    .signin-btn svg { width: 18px; height: 18px; }
+
+    /* ── Navigation ───────────────────────────────────── */
+    .main-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0;
+    }
+
+    .main-nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray-800);
+      border-radius: 8px;
+      transition: all var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--green-primary);
+      background: var(--green-light);
+    }
+
+    .nav-search-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+    }
+    .nav-search-btn:hover {
+      background: var(--green-primary);
+    }
+    .nav-search-btn:hover svg { color: var(--white); }
+    .nav-search-btn svg { width: 18px; height: 18px; color: var(--gray-600); }
+
+    /* ─ Hero / Page Title ────────────────────────────── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-accent) 100%);
+      color: var(--white);
+      padding: 48px 0 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+    }
+
+    .page-hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .page-hero p {
+      font-size: 15px;
+      opacity: .85;
+    }
+
+    /* ── Services Grid ────────────────────────────────── */
+    .services-section {
+      padding: 48px 0 80px;
+      background: var(--gray-100);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .service-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 20px;
+      border-bottom: 1px solid var(--gray-200);
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      background: var(--white);
+    }
+
+    .service-card:nth-child(odd)  { border-right: 1px solid var(--gray-200); }
+    .service-card:nth-child(even) { border-left:  1px solid var(--gray-200); }
+
+    .service-card:hover {
+      background: var(--green-light);
+      padding-left: 28px;
+    }
+
+    .service-card:hover .service-icon {
+      background: var(--green-primary);
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    .service-card:hover .service-name { color: var(--green-primary); }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--green-light);
+      color: var(--green-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition);
+    }
+
+    .service-icon svg { width: 24px; height: 24px; }
+
+    .service-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-900);
+      transition: color var(--transition);
+    }
+
+    .service-arrow {
+      margin-left: auto;
+      color: var(--gray-400);
+      transition: all var(--transition);
+    }
+    .service-card:hover .service-arrow {
+      color: var(--green-primary);
+      transform: translateX(4px);
+    }
+
+    /* ── Purple Dot Decorations ───────────────────────── */
+    .dot-decoration {
+      display: flex;
+      gap: 4px;
+      margin: 6px 0;
+    }
+    .dot-decoration span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--purple-accent);
+      opacity: .55;
+    }
+
+    /* ── Footer ───────────────────────────────────────── */
+    .site-footer {
+      background: var(--green-dark);
+      color: var(--white);
+      padding: 28px 0;
+      text-align: center;
+      font-size: 13px;
+      opacity: .92;
+    }
+
+    /* ── Pill Toast Message ───────────────────────────── */
+    .pill-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--green-primary);
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      box-shadow: 0 8px 30px rgba(26,107,60,.35);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform .45s cubic-bezier(.22,1,.36,1),
+                  opacity  .45s cubic-bezier(.22,1,.36,1);
+    }
+
+    .pill-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .pill-toast svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      .top-bar .container { flex-direction: column; align-items: flex-start; }
+      .top-contacts { flex-wrap: wrap; gap: 14px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card:nth-child(odd)  { border-right: none; }
+      .service-card:nth-child(even) { border-left:  none; }
+      .page-hero h1 { font-size: 22px; }
+      .nav-links { gap: 2px; }
+      .nav-links a { padding: 6px 10px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Top Bar ──────────────────────────────────── -->
+  <header class="top-bar">
+    <div class="container">
+      <div class="logo-group">
+        <div class="logo-badge">
+          <!-- Crest / Coat of Arms placeholder -->
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="28" r="18" fill="#1a6b3c" opacity=".15"/>
+            <path d="M32 12 C22 12 16 20 16 28 C16 38 24 46 32 52 C40 46 48 38 48 28 C48 20 42 12 32 12Z" fill="#1a6b3c"/>
+            <path d="M28 26 L32 22 L36 26 L34 34 L30 34Z" fill="#fff"/>
+            <rect x="24" y="36" width="16" height="3" rx="1.5" fill="#fff" opacity=".7"/>
+            <rect x="26" y="41" width="12" height="2" rx="1" fill="#fff" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span>Murang'a County</span><br>Public Services
+        </div>
+      </div>
+
+      <div class="top-contacts">
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="6" width="15" height="12" rx="2"/>
+            <path d="M16 10h4l3 4v4h-7"/>
+            <circle cx="5.5" cy="18" r="2.5"/>
+            <circle cx="18.5" cy="18" r="2.5"/>
+          </svg>
+          <a href="tel:+254716017296">+254 716 017 296</a>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <a href="tel:+254757562988">+254 757 562 988</a>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="a11y-btn" aria-label="Accessibility options">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="2"/>
+            <path d="M12 7v5"/>
+            <path d="M9 10l3 2 3-2"/>
+            <path d="M8 21l4-9 4 9"/>
+          </svg>
+        </button>
+        <button class="signin-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z"/>
+            <path d="M12 14v3"/>
+            <path d="M8 21h8"/>
+            <path d="M12 17c-3 0-5 1.5-5 4"/>
+            <path d="M12 17c3 0 5 1.5 5 4"/>
+          </svg>
+          Sign In
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Navigation ───────────────────────────────── -->
+  <nav class="main-nav">
+    <div class="container">
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Quick Links</a></li>
+        <li><a href="#">Help &amp; Support</a></li>
+      </ul>
+      <button class="nav-search-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── Page Hero ────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Our Services</h1>
+      <p>Access Murang'a County public services quickly and easily.</p>
+    </div>
+  </section>
+
+  <!-- ─── Services Grid ────────────────────────────── -->
+  <section class="services-section">
+    <div class="container">
+      <div class="services-grid">
+
+        <!-- Row 1 -->
+        <div class="service-card" data-service="Single Business Permit">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a4 4 0 0 0-8 0v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/>
+              <line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+          </div>
+          <span class="service-name">Single Business Permit</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <div class="service-card" data-service="Parking Licenses And Fees">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>
+            </svg>
+          </div>
+          <span class="service-name">Parking Licenses And Fees</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="service-card" data-service="Apply for Liquor License">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 2h8l-1 9H9L8 2z"/>
+              <path d="M12 11v7"/>
+              <path d="M8 22h8"/>
+              <path d="M7 14l-2 6"/>
+              <path d="M17 14l2 6"/>
+            </svg>
+          </div>
+          <span class="service-name">Apply for Liquor License</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <div class="service-card" data-service="Property Services">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M9 22V18h6v4"/>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01"/>
+            </svg>
+          </div>
+          <span class="service-name">Property Services</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="service-card" data-service="Apply for Building Permit">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 22V10l8-8 8 8v12"/>
+              <path d="M12 2v6"/>
+              <path d="M8 22v-6h8v6"/>
+              <path d="M2 10h4M18 10h4"/>
+            </svg>
+          </div>
+          <span class="service-name">Apply for Building Permit</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <div class="service-card" data-service="Health Services">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <span class="service-name">Health Services</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="service-card" data-service="Land Services">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18"/>
+              <path d="M5 21V10l7-5 7 5v11"/>
+              <path d="M9 21v-6h6v6"/>
+              <path d="M9 10h.01M12 10h.01M15 10h.01"/>
+            </svg>
+          </div>
+          <span class="service-name">Land Services</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+        <div class="service-card" data-service="Others">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"/>
+              <circle cx="19" cy="12" r="1"/>
+              <circle cx="5"  cy="12" r="1"/>
+            </svg>
+          </div>
+          <span class="service-name">Others</span>
+          <svg class="service-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ───────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">&copy; 2026 Murang'a County Government. All rights reserved.</div>
+  </footer>
+
+  <!-- ── Pill Toast ───────────────────────────────── -->
+  <div class="pill-toast" id="pillToast" role="status" aria-live="polite">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 8v4"/>
+      <path d="M12 16h.01"/>
+    </svg>
+    <span id="pillText">Coming Soon</span>
+  </div>
+
+  <!-- ─── Script ───────────────────────────────────── -->
+  <script>
+    (() => {
+      const toast    = document.getElementById('pillToast');
+      const pillText = document.getElementById('pillText');
+      let timer      = null;
+
+      function showToast(serviceName) {
+        // Cancel any in-flight dismiss
+        if (timer) clearTimeout(timer);
+
+        // Update message
+        pillText.textContent = `${serviceName} — Coming Soon`;
+
+        // Force reflow so the transition re-triggers if clicked rapidly
+        toast.classList.remove('show');
+        void toast.offsetWidth;
+
+        // Fade in (from bottom)
+        toast.classList.add('show');
+
+        // After 3 seconds, fade out (to bottom)
+        timer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+
+      // Attach click handlers to every service card
+      document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.getAttribute('data-service') || 'This service';
+          showToast(name);
+        });
+
+        // Keyboard accessibility
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
