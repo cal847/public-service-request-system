@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Decorative backgrounds
+   ========================================================================== */
+
+/* Soft green glows + tiled tea-leaf pattern, fixed behind everything */
+/* body { position: relative; } */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 92% 8%,  rgba(33, 99, 62, 0.12), transparent 38%),
+    radial-gradient(circle at 4% 62%,  rgba(33, 99, 62, 0.08), transparent 34%);
+}
+
+/* Rolling hills sitting at the very bottom of the page */
+body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: clamp(120px, 18vw, 240px);
+  pointer-events: none;
+  background: url('images/hills.svg') bottom center / 100% 100% no-repeat;
+}
+
+.services-wrap {
+  position: relative;
+  isolation: isolate;
+  padding-bottom: clamp(6rem, 18vw, 11rem);
+  overflow: hidden;
+}
+
+.services-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  opacity: 0.5;
+
+  background:
+    url('images/leaves.svg') 0 0 / 550px 550px repeat;
+}
+
+/* Contour-wave texture over the header's green gradient */
+/* .site-header {
+  background:
+    url('images/waves.svg') 0 0 / 120px 80px repeat,
+    linear-gradient(
+      180deg,
+      rgba(33, 99, 62, 0.12) 0%,
+      rgba(33, 99, 62, 0.04) 60%,
+      rgba(33, 99, 62, 0.01) 100%
+    );
+} */
+
+/* Keep the patterns out of the way in high contrast mode */
+html.a11y-contrast body::before,
+html.a11y-contrast body::after { display: none; }
+html.a11y-contrast .site-header { background: transparent; }
+
+@media (max-width: 700px) {
+  .services-wrap { padding-bottom: clamp(5rem, 24vw, 8rem); }
+}
