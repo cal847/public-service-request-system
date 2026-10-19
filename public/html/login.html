@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In | Murang'a County Public Services</title>
+  <script>
+    try {
+      var t = localStorage.getItem('mcps-theme');
+      if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/background.css">
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to form</a>
+
+  <header class="site-header auth-header">
+    <a class="brand" href="./index.html" aria-label="Murang'a County Public Services home">
+      <img class="brand-logo" src="../images/logo.jpeg" alt="Murang'a County coat of arms">
+      <span class="brand-name">MURANG'A COUNTY<br>PUBLIC SERVICES PORTAL</span>
+    </a>
+    <a class="auth-back" href="./index.html">&larr; Back to home</a>
+  </header>
+
+  <main id="main" class="auth-main" tabindex="-1">
+    <section class="auth-card" aria-labelledby="loginTitle">
+      <h1 id="loginTitle">Sign In</h1>
+      <p class="auth-sub">Welcome back. Sign in to submit and track your service requests.</p>
+
+      <p class="form-alert" id="formAlert" role="alert" hidden></p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="identifier">Email or phone number</label>
+          <input id="identifier" name="identifier" type="text" autocomplete="username"
+                 placeholder="you@example.com or 0712 345 678"
+                 aria-describedby="identifier-error" required>
+          <p class="field-error" id="identifier-error" data-error-for="identifier"></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="pass-wrap">
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   aria-describedby="password-error" required>
+            <button type="button" class="toggle-pass" data-target="password" aria-pressed="false">Show</button>
+          </div>
+          <p class="field-error" id="password-error" data-error-for="password"></p>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">Sign In</button>
+      </form>
+
+      <p class="auth-switch">New here? <a href="./register.html">Create an account</a></p>
+    </section>
+  </main>
+
+  <script src="../js/auth.js"></script>
+</body>
+</html>

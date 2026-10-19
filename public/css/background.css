@@ -26,7 +26,7 @@ body::after {
   z-index: -1;
   height: clamp(120px, 18vw, 240px);
   pointer-events: none;
-  background: url('images/hills.svg') bottom center / 100% 100% no-repeat;
+  background: url('../images/hills.svg') bottom center / 100% 100% no-repeat;
 }
 
 .services-wrap {
@@ -46,7 +46,7 @@ body::after {
   opacity: 0.5;
 
   background:
-    url('images/leaves.svg') 0 0 / 550px 550px repeat;
+    url('../images/leaves.svg') 0 0 / 550px 550px repeat;
 }
 
 /* Contour-wave texture over the header's green gradient */
