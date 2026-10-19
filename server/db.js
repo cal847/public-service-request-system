@@ -28,8 +28,8 @@ db.exec(
 
   CREATE TABLE IF NOT EXISTS requests (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    tracking_code TEXT NOT NULL UNIQUE,  -- e.g. MRG-2026-A7K3QP (generated in the next step)
-    user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tracking_code TEXT NOT NULL UNIQUE,  
+    user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
     category      TEXT NOT NULL,
     location      TEXT NOT NULL,
     description   TEXT NOT NULL,

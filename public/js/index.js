@@ -13,85 +13,9 @@
     menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
 
-  // Search
-  var searchForm = document.getElementById('searchForm');
-  var searchBtn = document.getElementById('searchBtn');
-  var searchInput = document.getElementById('searchInput');
-  var serviceList = document.getElementById('serviceList');
-  var notFound = document.getElementById('notFound');
-  var statusEl = document.getElementById('searchStatus');
-  var services = Array.prototype.slice.call(serviceList.querySelectorAll('.service'));
-
   function normalise(text) {
     return text.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
   }
-
-  function runSearch() {
-    var query = normalise(searchInput.value);
-    var terms = query ? query.split(' ') : [];
-    var matches = 0;
-
-    services.forEach(function (item) {
-      var name = normalise(item.getAttribute('data-name'));
-      var hit = terms.every(function (t) { return name.indexOf(t) !== -1; });
-      item.hidden = !hit;
-      if (hit) matches++;
-    });
-
-    serviceList.classList.toggle('filtered', terms.length > 0);
-
-    if (terms.length === 0) {
-      notFound.hidden = true;
-      serviceList.hidden = false;
-      statusEl.textContent = '';
-    } else if (matches === 0) {
-      serviceList.hidden = true;
-      notFound.hidden = false;
-      statusEl.textContent = 'Service not available';
-    } else {
-      serviceList.hidden = false;
-      notFound.hidden = true;
-      statusEl.textContent = matches + (matches === 1 ? ' service found' : ' services found');
-    }
-  }
-
-  function setSearchOpen(open) {
-    searchForm.classList.toggle('open', open);
-    searchBtn.setAttribute('aria-expanded', String(open));
-    searchInput.tabIndex = open ? 0 : -1;
-    if (open) {
-      searchInput.focus();
-    } else {
-      searchInput.value = '';
-      runSearch();
-    }
-  }
-
-  searchBtn.addEventListener('click', function () {
-    var isOpen = searchForm.classList.contains('open');
-    if (!isOpen) {
-      setSearchOpen(true);
-    } else if (searchInput.value.trim()) {
-      runSearch();
-      searchInput.focus();
-    } else {
-      setSearchOpen(false);
-    }
-  });
-
-  searchInput.addEventListener('input', runSearch);
-
-  searchForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    runSearch();
-  });
-
-  searchInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      setSearchOpen(false);
-      searchBtn.focus();
-    }
-  });
 
   // Accessibility Menu
   var STORAGE_KEY = 'mcps-a11y';
@@ -194,6 +118,203 @@
 
   load();
   apply();
+})();
+
+// Service Request Form
+(function () {
+  'use strict';
+
+  var form = document.getElementById('requestForm');
+  if (!form) return;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var alertBox = $('requestAlert');
+  var success = $('requestSuccess');
+  var submitBtn = $('submitRequest');
+  var imageInput = $('image');
+  var preview = $('uploadPreview');
+  var previewImg = $('previewImg');
+  var previewUrl = null;
+
+  var MAX_BYTES = 5 * 1024 * 1024;
+  var IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+  var CATEGORIES = ['Streetlight', 'Water', 'Garbage collection', 'Roads', 'Other'];
+
+  var dateFmt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'short' });
+
+  /* ---------- helpers ---------- */
+  function setFieldError(name, message) {
+    var out = form.querySelector('[data-error-for="' + name + '"]');
+    var input = form.elements[name];
+    if (out) out.textContent = message || '';
+    if (input) {
+      if (message) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+    }
+  }
+
+  function clearErrors() {
+    ['category', 'location', 'description', 'image'].forEach(function (n) { setFieldError(n, ''); });
+    alertBox.hidden = true;
+    alertBox.textContent = '';
+  }
+
+  function showAlert(message) {
+    alertBox.textContent = message;
+    alertBox.hidden = false;
+    alertBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  function showErrors(errors) {
+    var first = null;
+    Object.keys(errors).forEach(function (name) {
+      setFieldError(name, errors[name]);
+      if (!first && form.elements[name]) first = form.elements[name];
+    });
+    if (first) first.focus();
+  }
+
+  function showForm() {
+    gate.hidden = true;
+    success.hidden = true;
+    form.hidden = false;
+  }
+
+  fetch('/api/auth/me', { credentials: 'same-origin' })
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .then(function (data) {
+      if (!data) return showGate('guest');
+      if (data.user.role === 'admin') return showGate('admin');
+      showForm();
+    })
+    .catch(function () { showGate('offline'); });
+
+  /* ---------- description counter ---------- */
+  var description = $('description');
+  var counter = $('description-count');
+  function updateCount() { counter.textContent = description.value.length + ' / 1000'; }
+  description.addEventListener('input', updateCount);
+
+  /* ---------- photo preview ---------- */
+  function clearPreview() {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+    previewImg.removeAttribute('src');
+    preview.hidden = true;
+    imageInput.value = '';
+  }
+
+  imageInput.addEventListener('change', function () {
+    setFieldError('image', '');
+    var file = imageInput.files[0];
+    if (!file) return clearPreview();
+
+    if (IMAGE_TYPES.indexOf(file.type) === -1) {
+      clearPreview();
+      return setFieldError('image', 'Choose a JPG, PNG or WebP image.');
+    }
+    if (file.size > MAX_BYTES) {
+      clearPreview();
+      return setFieldError('image', 'The photo is too large. Maximum size is 5 MB.');
+    }
+
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(file);
+    previewImg.src = previewUrl;
+    preview.hidden = false;
+  });
+
+  $('removeImage').addEventListener('click', function () {
+    clearPreview();
+    imageInput.focus();
+  });
+
+  /* ---------- submit ---------- */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    var values = {
+      category: form.elements.category.value,
+      location: form.elements.location.value.trim().replace(/\s+/g, ' '),
+      description: form.elements.description.value.trim()
+    };
+    var file = imageInput.files[0];
+
+    var errors = {};
+    if (CATEGORIES.indexOf(values.category) === -1) errors.category = 'Choose a category.';
+    if (values.location.length < 3) errors.location = 'Enter the location (at least 3 characters).';
+    if (values.description.length < 10) errors.description = 'Describe the issue in at least 10 characters.';
+    if (file && IMAGE_TYPES.indexOf(file.type) === -1) errors.image = 'Choose a JPG, PNG or WebP image.';
+    if (file && file.size > MAX_BYTES) errors.image = 'The photo is too large. Maximum size is 5 MB.';
+    if (Object.keys(errors).length) return showErrors(errors);
+
+    var body = new FormData();
+    body.append('category', values.category);
+    body.append('location', values.location);
+    body.append('description', values.description);
+    if (file) body.append('image', file);
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    // No Content-Type header here: the browser adds the multipart boundary itself.
+    fetch('/api/service-requests', { method: 'POST', credentials: 'same-origin', body: body })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
+          return { ok: res.ok, status: res.status, data: data };
+        });
+      })
+      .then(function (r) {
+        if (r.ok) return showSuccess(r.data.request);
+        if (r.status === 401) return showGate('guest');
+        if (r.data.errors) showErrors(r.data.errors);
+        else showAlert(r.data.error || 'Could not submit your request. Please try again.');
+      })
+      .catch(function () {
+        showAlert('Cannot reach the server. Check your connection and try again.');
+      })
+      .then(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit request';
+      });
+  });
+
+  /* ---------- success ---------- */
+  function showSuccess(request) {
+    $('trackingCode').textContent = request.trackingCode;
+    $('successMeta').textContent = request.category + ' · ' + dateFmt.format(new Date(request.createdAt));
+    $('copyStatus').textContent = '';
+
+    form.reset();
+    updateCount();
+    clearPreview();
+
+    form.hidden = true;
+    success.hidden = false;
+    success.focus();
+
+    // Lets other scripts (for example the "track my requests" list) refresh.
+    document.dispatchEvent(new CustomEvent('request:created', { detail: request }));
+  }
+
+  $('copyCode').addEventListener('click', function () {
+    var code = $('trackingCode').textContent;
+    var status = $('copyStatus');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(
+        function () { status.textContent = 'Tracking code copied.'; },
+        function () { status.textContent = 'Could not copy. Select the code and press Ctrl+C.'; }
+      );
+    } else {
+      status.textContent = 'Select the code and press Ctrl+C to copy it.';
+    }
+  });
+
+  $('newRequest').addEventListener('click', function () {
+    showForm();
+    form.elements.category.focus();
+  });
 })();
 
 /* ---------- Dark mode ---------- */
@@ -345,7 +466,7 @@
         resolved: { label: 'Resolved', color: '#16a34a', icon: 'check_circle' }
       };
       const cards = requests.map(req => {
-        const status = statusConfig[req.status] || statusConfig.pending;
+        const statusKey = String(req.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
         const date = new Date(req.created_at).toLocaleDateString('en-KE', {
           year: 'numeric',
           month: 'short',
@@ -354,7 +475,7 @@
 
         const card = document.createElement('article');
         card.className = 'about-card';
-        card.dataset.status = req.status || 'pending';
+        card.dataset.status = statusKey;
         card.style.position = 'relative';
         card.style.overflow = 'hidden';
 

@@ -109,84 +109,83 @@
       <a href="#">Quick Links</a>
       <a href="#">Help &amp; Support</a>
     </nav>
-
-    <form class="search" id="searchForm" role="search" autocomplete="off">
-      <label class="visually-hidden" for="searchInput">Search services</label>
-      <input class="search-input" id="searchInput" type="search" placeholder="Search services" tabindex="-1">
-      <button class="search-btn" id="searchBtn" type="button" aria-label="Search services" aria-expanded="false">
-        <span class="material-symbols-outlined icon icon-lg" aria-hidden="true">search</span>
-      </button>
-    </form>
   </div>
 
-  <main id="services" class="services-wrap" tabindex="-1">
-    <p class="search-status" id="searchStatus" role="status" aria-live="polite"></p>
+  <!-- ========== Service Request Submission Form ========== -->
+  <main id="request" class="request-wrap" tabindex="-1">
+    <section class="request-card" aria-labelledby="requestTitle">
+      <h1 id="requestTitle">Submit a Service Request</h1>
+      <p class="request-sub">
+        Report a problem in your area, such as a broken streetlight, a water issue or missed
+        garbage collection. You'll get a tracking code to follow its progress.
+      </p>
+      
+      <p class="form-alert" id="requestAlert" role="alert" hidden></p>
 
-    <ul class="services" id="serviceList">
-      <li class="service" data-name="Single Business Permit">
-        <a href="#">
-          <svg class="icon icon-svc" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.5">
-            <rect x="3.5" y="9" width="25" height="17" rx="3"/>
-            <path d="M11 9V6.5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2V9"/>
-            <path d="M3.5 17.5h25"/>
-            <rect x="14" y="15.5" width="4" height="4" rx="1" fill="#fff"/>
-          </svg>
-          <span>Single Business Permit</span>
-        </a>
-      </li>
-      <li class="service" data-name="Parking Licenses And Fees">
-        <a href="#">
-          <svg class="icon icon-svc" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.5">
-            <circle cx="16" cy="16" r="12.5"/>
-            <path d="M12.5 23V9.5h4.2a4.1 4.1 0 0 1 0 8.2h-4.2"/>
-          </svg>
-          <span>Parking Licenses And Fees</span>
-        </a>
-      </li>
-      <li class="service" data-name="Apply for Liquor License">
-        <a href="#">
-          <span class="material-symbols-outlined icon icon-svc" aria-hidden="true">local_bar</span>
-          <span>Apply for Liquor License</span>
-        </a>
-      </li>
-      <li class="service" data-name="Property Services">
-        <a href="#">
-          <span class="material-symbols-outlined icon icon-svc" aria-hidden="true">apartment</span>
-          <span>Property Services</span>
-        </a>
-      </li>
-      <li class="service" data-name="Apply for Building Permit">
-        <a href="#">
-          <span class="material-symbols-outlined icon icon-svc" aria-hidden="true">construction</span>
-          <span>Apply for Building Permit</span>
-        </a>
-      </li>
-      <li class="service" data-name="Health Services">
-        <a href="#">
-          <svg class="icon icon-svc" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.5">
-            <path d="M12 3.5h8a1.5 1.5 0 0 1 1.5 1.5v6.5H28A1.5 1.5 0 0 1 29.5 13v6a1.5 1.5 0 0 1-1.5 1.5h-6.5V27a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 10.5 27v-6.5H4A1.5 1.5 0 0 1 2.5 19v-6A1.5 1.5 0 0 1 4 11.5h6.5V5A1.5 1.5 0 0 1 12 3.5z"/>
-          </svg>
-          <span>Health Services</span>
-        </a>
-      </li>
-      <li class="service" data-name="Land Services">
-        <a href="#">
-          <span class="material-symbols-outlined icon icon-svc" aria-hidden="true">account_balance</span>
-          <span>Land Services</span>
-        </a>
-      </li>
-      <li class="service" data-name="Others">
-        <a href="#">
-          <span class="material-symbols-outlined icon icon-svc" aria-hidden="true">account_balance</span>
-          <span>Others</span>
-        </a>
-      </li>
-    </ul>
+      <form id="requestForm" class="form-grid">
+        <div class="field span-2">
+          <label for="category">Category</label>
+          <select id="category" name="category" required aria-describedby="category-error">
+            <option value="">Select a category…</option>
+            <option>Streetlight</option>
+            <option>Water</option>
+            <option>Garbage collection</option>
+            <option>Roads</option>
+            <option>Other</option>
+          </select>
+          <p class="field-error" id="category-error" data-error-for="category"></p>
+        </div>
 
-    <div class="not-found" id="notFound" hidden>
-      <span class="material-symbols-outlined icon icon-lg" aria-hidden="true">search_off</span>
-      <p>Service not available</p>
-    </div>
+        <div class="field span-2">
+          <label for="location">Location</label>
+          <input id="location" name="location" type="text" maxlength="120" required
+                 placeholder="e.g. Kenol Market, near the bus stage"
+                 aria-describedby="location-error">
+          <p class="field-error" id="location-error" data-error-for="location"></p>
+        </div>
+
+        <div class="field span-2">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="5" maxlength="1000" required
+                    placeholder="Tell us what is wrong and how long it has been happening."
+                    aria-describedby="description-count description-error"></textarea>
+          <p class="char-count" id="description-count">0 / 1000</p>
+          <p class="field-error" id="description-error" data-error-for="description"></p>
+        </div>
+
+        <div class="field span-2">
+          <label for="image">Photo <span class="optional">(optional)</span></label>
+          <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+                 aria-describedby="image-hint image-error">
+          <p class="field-hint" id="image-hint">JPG, PNG or WebP, up to 5 MB.</p>
+          <p class="field-error" id="image-error" data-error-for="image"></p>
+
+          <div class="upload-preview" id="uploadPreview" hidden>
+            <img id="previewImg" alt="Preview of the selected photo">
+            <button type="button" class="btn-link" id="removeImage">Remove photo</button>
+          </div>
+        </div>
+
+        <div class="span-2">
+          <button type="submit" class="btn-primary" id="submitRequest">Submit request</button>
+        </div>
+      </form>
+
+      <!-- Shown after a successful submission -->
+      <div class="request-success" id="requestSuccess" hidden tabindex="-1">
+        <span class="material-symbols-outlined success-icon" aria-hidden="true">check_circle</span>
+        <h2>Request submitted</h2>
+        <p>Keep this tracking code to follow your request.</p>
+        <p class="tracking-code" id="trackingCode"></p>
+        <p class="success-meta" id="successMeta"></p>
+        <div class="success-actions">
+          <button type="button" class="btn-secondary" id="copyCode">Copy code</button>
+          <a class="btn-secondary" href="#track">View my requests</a>
+          <button type="button" class="btn-primary btn-inline" id="newRequest">Submit another</button>
+        </div>
+        <p class="visually-hidden" id="copyStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
   </main>
 
     <!-- ========== About ========== -->

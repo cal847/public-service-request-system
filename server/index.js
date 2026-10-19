@@ -35,6 +35,13 @@ app.use(
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/service-requests', serviceRequestRoutes);
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, 'uploads'), {
+    index: false,
+    setHeaders: (res) => res.set('X-Content-Type-Options', 'nosniff'),
+  })
+);
 
 // Admins load admin page, everyone else is redirected to home page
 app.get('/admin.html', (req, res, next) => {
