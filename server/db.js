@@ -11,7 +11,8 @@ db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
 // Create user and service request tables
-db.exec(`
+db.exec(
+  `
   CREATE TABLE IF NOT EXISTS users (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     name          TEXT NOT NULL,
@@ -41,7 +42,19 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_requests_user   ON requests(user_id);
   CREATE INDEX IF NOT EXISTS idx_requests_status ON requests(status);
-`);
+
+  CREATE TABLE IF NOT EXISTS request_history (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    request_id  INTEGER NOT NULL REFERENCES requests(id) ON DELETE CASCADE,
+    from_status TEXT,                 
+    to_status   TEXT NOT NULL,
+    note        TEXT,                 
+    changed_by  INTEGER REFERENCES users(id),
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_history_request ON request_history(request_id);
+  `
+);
 
 // Seed an admin account
 function seedAdmin() {

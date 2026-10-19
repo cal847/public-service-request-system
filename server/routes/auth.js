@@ -24,7 +24,7 @@ const LOCK_DURATION_MS = 60 * 60 * 1000;
 
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
-const homeFor = (role) => (role === 'admin' ? '/admin.html' : '/dashboard.html');
+const homeFor = (role) => (role === 'admin' ? '../html/admin.html' : '../html/index.html');
 
 const publicUser = (u) => ({
   id: u.id, name: u.name, email: u.email, phone: u.phone, role: u.role, createdAt: u.created_at,

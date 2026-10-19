@@ -4,6 +4,8 @@ const session = require('express-session');
 
 require('./db');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const serviceRequestRoutes = require('./routes/service-requests');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +33,15 @@ app.use(
 );
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/service-requests', serviceRequestRoutes);
+
+// Admins load admin page, everyone else is redirected to home page
+app.get('/admin.html', (req, res, next) => {
+    const user = req.session.user;
+    if (!user) return res.redirect('/login.html');
+    if (user.role !== 'admin') return res.redirect('../html/index.html')
+})
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.listen(PORT, () => console.log(`Running at http://localhost:${PORT}`));

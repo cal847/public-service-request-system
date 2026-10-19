@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard | Murang'a County Public Services</title>
+  <script>
+    try {
+      var t = localStorage.getItem('mcps-theme');
+      if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=block">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell" id="shell">
+
+    <!-- ========== Sidebar ========== -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+      <a class="sb-logo" href="index.html">
+        <img class="sb-logo-img" src="images/logo.jpeg" alt="">
+        <span>Murang'a County<small>Service requests</small></span>
+      </a>
+
+      <nav>
+        <p class="sb-section">Overview</p>
+        <a class="sb-item active" href="#dashboard" data-page="dashboard">
+          <span class="material-symbols-outlined icon" aria-hidden="true">dashboard</span> Dashboard
+        </a>
+
+        <p class="sb-section">Service requests</p>
+        <a class="sb-item" href="#requests" data-page="requests">
+          <span class="material-symbols-outlined icon" aria-hidden="true">list_alt</span> Requests
+          <span class="sb-badge" id="pendingBadge" hidden>0</span>
+        </a>
+      </nav>
+
+      <div class="sb-user">
+        <div class="sb-avatar" id="userInitials" aria-hidden="true">A</div>
+        <div class="sb-user-text">
+          <div class="sb-user-name" id="userName">Admin</div>
+          <div class="sb-user-role">Administrator</div>
+        </div>
+        <button class="icon-btn" id="signOut" type="button" aria-label="Sign out">
+          <span class="material-symbols-outlined icon" aria-hidden="true">logout</span>
+        </button>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- ========== Main ========== -->
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu"
+                aria-expanded="false" aria-controls="sidebar">
+          <span class="material-symbols-outlined icon" aria-hidden="true">menu</span>
+        </button>
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSubtitle">Overview of all service requests</p>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span class="material-symbols-outlined icon" aria-hidden="true">dark_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="content" id="main" tabindex="-1">
+
+        <!-- ===== Dashboard ===== -->
+        <section class="page active" id="page-dashboard" aria-label="Dashboard">
+          <div class="metrics-grid" id="metrics" aria-live="polite"></div>
+
+          <div class="two-col">
+            <div class="col-stack">
+              <div class="panel">
+                <div class="panel-head"><h2 class="panel-title">Open vs resolved</h2></div>
+                <div class="split" id="openResolved"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head">
+                  <h2 class="panel-title">Requests per month</h2>
+                  <span class="panel-sub">Last 6 months</span>
+                </div>
+                <div class="trend" id="trend"></div>
+              </div>
+            </div>
+
+            <div class="col-stack">
+              <div class="panel">
+                <div class="panel-head">
+                  <h2 class="panel-title">By category</h2>
+                  <span class="legend">
+                    <span class="dot dot-resolved"></span> Resolved
+                    <span class="dot dot-open"></span> Open
+                  </span>
+                </div>
+                <div class="bar-list" id="categoryList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><h2 class="panel-title">Recent activity</h2></div>
+                <ul class="activity-list" id="activityList"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Requests ===== -->
+        <section class="page" id="page-requests" aria-label="Requests">
+          <div class="panel">
+            <form class="filter-bar" id="filters" role="search">
+              <label class="visually-hidden" for="fSearch">Search requests</label>
+              <input class="control" id="fSearch" type="search" placeholder="Search by code, citizen or location…">
+
+              <label class="visually-hidden" for="fStatus">Filter by status</label>
+              <select class="control" id="fStatus">
+                <option value="">All statuses</option>
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Resolved</option>
+              </select>
+
+              <label class="visually-hidden" for="fCategory">Filter by category</label>
+              <select class="control" id="fCategory">
+                <option value="">All categories</option>
+              </select>
+            </form>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption class="visually-hidden">Service requests</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Tracking code</th>
+                    <th scope="col">Citizen</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Submitted</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="requestRows"></tbody>
+              </table>
+            </div>
+
+            <div class="pager">
+              <span id="pagerInfo"></span>
+              <div class="pager-buttons">
+                <button class="btn btn-outline btn-sm" id="prevPage" type="button">Previous</button>
+                <button class="btn btn-outline btn-sm" id="nextPage" type="button">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========== Request details ========== -->
+  <dialog class="modal" id="detailsDialog" aria-labelledby="detailsTitle">
+    <div class="modal-head">
+      <h2 class="modal-title" id="detailsTitle">Request</h2>
+      <button class="modal-close" type="button" data-close aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body" id="detailsBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" type="button" data-close>Close</button>
+      <button class="btn btn-primary" type="button" id="detailsUpdate" hidden>Update status</button>
+    </div>
+  </dialog>
+
+  <!-- ========== Update status ========== -->
+  <dialog class="modal modal-sm" id="statusDialog" aria-labelledby="statusTitle">
+    <form id="statusForm" novalidate>
+      <div class="modal-head">
+        <h2 class="modal-title" id="statusTitle">Update status</h2>
+        <button class="modal-close" type="button" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" id="statusDesc"></p>
+        <div class="status-move" id="statusMove"></div>
+
+        <label class="form-label" for="statusNote">Note to the citizen <span aria-hidden="true">*</span></label>
+        <textarea class="control" id="statusNote" rows="4" maxlength="500" required
+                  placeholder="Explain what is happening with this request…"></textarea>
+        <p class="hint">The citizen will see this note when they track their request.</p>
+
+        <p class="form-alert" id="statusError" role="alert" hidden></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="statusSave">Save status</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -90,9 +90,9 @@
           </div>
         </div>
 
-        <a class="signin" href="../html/login.html">
-          <span class="material-symbols-outlined icon" aria-hidden="true">fingerprint</span>
-          <span>Sign In</span>
+        <a class="signin" id="auth-btn" href="../html/login.html">
+          <span class="material-symbols-outlined icon" id="auth-icon" aria-hidden="true">fingerprint</span>
+          <span id="auth-text">Sign In</span>
         </a>
       </div>
     </div>
@@ -105,7 +105,7 @@
 
     <nav class="main-nav" id="mainNav" aria-label="Main">
       <a href="#" aria-current="page">Home</a>
-      <a href="#about">About</a>
+      <a href="#about" id="nav-track">About</a>
       <a href="#">Quick Links</a>
       <a href="#">Help &amp; Support</a>
     </nav>
@@ -237,6 +237,35 @@
       </article>
     </div>
   </section>
+  
+  <!-- ========== Track My Services ========== -->
+  <section class="about" id="track" hidden aria-labelledby="trackTitle">
+    <div class="about-head">
+      <h2 id="trackTitle">Track My Service Requests</h2>
+      <p>
+        View the status of your submitted requests (Pending, In Progress, or Resolved) 
+        and manage your interactions with Murang'a County services.
+      </p>
+    </div>
+    <div class="track-filters" role="tablist" aria-label="Filter service requests by status">
+      <button class="track-filter-btn active" role="tab" aria-selected="true" data-status="all">All Requests</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="pending">Pending</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="in-progress">In Progress</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="resolved">Resolved</button>
+    </div>
+
+    <!-- index.js dynamically injects request cards into this container -->
+    <div class="about-grid" id="track-requests-container">
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">pending_actions</span></span>
+        <h3>No Active Requests</h3>
+        <p>You currently have no service requests in progress. Submit a new request to get started.</p>
+      </article>
+    </div>
+  </section>
+
+
+
 
   <!-- ========== Footer ========== -->
   <footer class="site-footer">
