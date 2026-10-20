@@ -74,6 +74,8 @@ function handleUpload(req, res, next) {
   });
 }
 
+const CODE_RE = /^MCG-\d{4}-[A-Z2-9]{6}$/;
+
 const iso = (col) => `strftime('%Y-%m-%dT%H:%M:%SZ', ${col})`;
 
 const mapRequest = (r) => ({
@@ -170,5 +172,50 @@ router.get('/me', requireAuth, (req, res) => {
 
   res.json({ requests: rows.map(mapRequest), count: rows.length });
 });
+
+/* ---------- GET /api/service-request/track/:code -> looks up request using the tracking code ---------- */
+router.get('/track/:code', (req, res) => {
+  const code = String(req.params.code || '').trim().toUpperCase();
+  if (!CODE_RE.test(code)) {
+    return res.status(400).json({
+      error: 'Please enter a valid tracking code'
+    })
+  }
+
+  const row = db
+    .prepare(
+      `SELECT id, tracking_code, category, status,
+              ${iso('created_at')} AS created_at, ${iso('updated_at')} AS updated_at
+         FROM requests
+        WHERE tracking_code = ? `
+    )
+    .get(code);
+
+    if (!row) return res.status(404).json({
+      error: 'No request found'
+    });
+
+    const latest = db
+    .prepare(
+      `SELECT note, ${iso('created_at')} AS created_at
+         FROM request_history
+        WHERE request_id = ? AND from_status IS NOT NULL AND note IS NOT NULL
+        ORDER BY id DESC LIMIT 1`
+    )
+    .get(row.id); 
+
+    res.json({
+    request: {
+      trackingCode: row.tracking_code,
+      category: row.category,
+      status: row.status,
+      response: row.response,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      latestUpdate: latest ? { note: latest.note, createdAt: latest.created_at } : null,
+    },
+  });
+
+})
 
 module.exports = router;

@@ -108,8 +108,17 @@
       <a href="#about" id="nav-track">About</a>
       <a href="#">Quick Links</a>
       <a href="#">Help &amp; Support</a>
-      <input class="search" placeholder="Search service request via tracking code">
     </nav>
+    <form class="track-search" id="trackSearch" role="search" autocomplete="off">
+        <label class="visually-hidden" for="trackInput">Search a request by tracking code</label>
+        <div class="track-field">
+          <span class="material-symbols-outlined icon" aria-hidden="true">search</span>
+          <input id="trackInput" type="search" placeholder="Search via tracking code"
+                maxlength="20" spellcheck="false" autocapitalize="characters"
+                aria-controls="trackResult">
+        </div>
+        <div class="track-result" id="trackResult" role="status" aria-live="polite" hidden></div>
+      </form>
   </div>
 
   <!-- ========== Service Request Submission Form ========== -->
@@ -139,7 +148,7 @@
 
         <div class="field span-2">
           <label for="location">Location</label>
-          <select id="category" name="category" required aria-describedby="category-error">
+          <select id="location" name="location" required aria-describedby="category-error">
             <option value="">Select your location...</option>
             <option>Murang'a</option>
             <option>Kangari</option>
@@ -267,9 +276,6 @@
     </div>
   </section>
 
-
-
-
   <!-- ========== Footer ========== -->
   <footer class="site-footer">
     <div class="footer-inner">
@@ -362,6 +368,28 @@
       <p>&copy; 2026 - 2027 </p>
     </div>
   </footer>
+
+    <!-- Request details (opened from the tracking-code search) -->
+  <dialog class="track-modal" id="trackModal" aria-labelledby="trackModalTitle">
+    <div class="tm-head">
+      <h2 class="tm-title" id="trackModalTitle"></h2>
+      <button type="button" class="tm-close" id="trackModalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="tm-body">
+      <div class="tm-status" id="tmStatus"></div>
+      <dl class="tm-list">
+        <dt>Date submitted</dt>
+        <dd id="tmSubmitted"></dd>
+        <dt>Date responded</dt>
+        <dd id="tmResponded"></dd>
+        <dt>Message from the admin</dt>
+        <dd class="tm-message" id="tmMessage"></dd>
+      </dl>
+    </div>
+    <div class="tm-foot">
+      <button type="button" class="tm-btn" id="trackModalDone">Close</button>
+    </div>
+  </dialog>
 
   <script src="../js/index.js"></script>
 </body>

@@ -175,19 +175,9 @@
   }
 
   function showForm() {
-    gate.hidden = true;
     success.hidden = true;
     form.hidden = false;
   }
-
-  fetch('/api/auth/me', { credentials: 'same-origin' })
-    .then(function (res) { return res.ok ? res.json() : null; })
-    .then(function (data) {
-      if (!data) return showGate('guest');
-      if (data.user.role === 'admin') return showGate('admin');
-      showForm();
-    })
-    .catch(function () { showGate('offline'); });
 
   /* ---------- description counter ---------- */
   var description = $('description');
@@ -267,7 +257,6 @@
       })
       .then(function (r) {
         if (r.ok) return showSuccess(r.data.request);
-        if (r.status === 401) return showGate('guest');
         if (r.data.errors) showErrors(r.data.errors);
         else showAlert(r.data.error || 'Could not submit your request. Please try again.');
       })
@@ -341,6 +330,152 @@
     apply(next);
     try { localStorage.setItem(KEY, next); } catch (e) {}
   });
+
+  // Track a request by its tracking code
+  (function () {
+    'use strict';
+
+    var form = document.getElementById('trackSearch');
+    var modal = document.getElementById('trackModal')
+    if (!form || !modal) return;
+
+    var $ = function (id) {
+      return document.getElementById(id);
+    };
+    var lastResult = null;
+
+    var input = document.getElementById('trackInput');
+    var box = document.getElementById('trackResult');
+    var dateFmt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
+    var PILL = { 'Pending': 'is-pending', 'In Progress': 'is-progress', 'Resolved': 'is-resolved' };
+    var timer = null;
+    var ticket = 0;
+
+    function normalise(value) {
+      var raw = String(value).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      var m = raw.match(/^MCG(\d{4})([A-Z2-9]{6})$/);
+      return m ? 'MCG-' + m[1] + '-' + m[2] : null;
+    }
+
+    // Elements are built with textContent, so nothing from the server is parsed as HTML. 
+    function el(tag, className, text) {
+      var node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text != null) node.textContent = text;
+      return node;
+    }
+
+    function pill(status) {
+      return el('span', 'tr-pill ' + (PILL[status] || 'is-pending'), status);
+    }
+
+    function show(nodes) {
+      box.replaceChildren.apply(box, nodes);
+      box.hidden = false;
+    }
+
+    function hideBox() { box.hidden = true; }
+    function reset() { ticket++; hideBox(); box.replaceChildren(); }
+
+    function showMessage(title, detail) {
+      var nodes = [el('p', 'tr-empty', title)];
+      if (detail) nodes.push(el('p', 'tr-meta', detail));
+      show(nodes);
+    }
+
+    function showNotFound() {
+      showMessage('No request found', 'Check the tracking code and try again.');
+    }
+
+    function showFound(data) {
+      lastResult = data;
+      var r = data.request;
+
+      var open = el('button', 'tr-open');
+      open.type = 'button';
+      open.setAttribute('aria-haspopup', 'dialog');
+      open.append(el('span', 'tr-code', r.trackingCode), pill(r.status));
+      open.addEventListener('click', openModal);
+
+      show([open, el('p', 'tr-meta')]);
+    }
+
+    function openModal() {
+      if (!lastResult) return;
+      var r = lastResult.request;
+      var latest = r.latestUpdate;
+
+      $('trackModalTitle').textContent = r.trackingCode;
+      $('tmStatus').replaceChildren(pill(r.status), el('span', 'cat', r.category));
+      $('tmSubmitted').textContent = dateFmt.format(new Date(r.createdAt));
+
+      var noteText = latest && latest.note ? latest.note :  'No response from the county yet. Please check back soon.';
+      $('tmMessage').textContent = noteText;
+      $('tmMessage').classList.toggle('is-empty', !latest || !latest.note);
+
+      if (!modal.open) modal.showModal();
+    }
+
+    function closeModal() { if (modal.open) modal.close(); }
+    $('trackModalClose').addEventListener('click', closeModal);
+    $('trackModalDone').addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); }); 
+
+
+    function search(value) {
+      var code = normalise(value);
+      if (!code) {
+        return showMessage('Enter the tracking code...');
+      }
+
+      var mine = ++ticket;
+      showMessage('searching…');
+
+      fetch('/api/service-requests/track/' + encodeURIComponent(code), { credentials: 'same-origin' })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            return { ok: res.ok, status: res.status, data: data };
+          });
+        })
+        .then(function (r) {
+          if (mine !== ticket) return;
+          if (r.ok) return showFound(r.data);
+          if (r.status === 404) return showNotFound();
+          showMessage(r.data.error || 'Something went wrong. Please try again.');
+        })
+        .catch(function () {
+          if (mine === ticket) showMessage('Cannot reach the server', 'Check your connection and try again.');
+        });
+    }
+
+    // Results appear as soon as a full code has been typed or pasted.
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      if (!input.value.trim()) return reset();
+      if (!normalise(input.value)) return reset(); // still typing a partial code
+      timer = setTimeout(function () { search(input.value); }, 350);
+    });
+
+    // Enter searches right away, and explains what is wrong with an incomplete code.
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearTimeout(timer);
+      if (!input.value.trim()) return reset();
+      search(input.value);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { input.value = ''; reset(); }
+    });
+    
+    document.addEventListener('click', function (e) {
+      if (!form.contains(e.target)) hideBox();
+    });
+    input.addEventListener('focus', function () {
+      if (box.childNodes.length) box.hidden = false;
+    });
+
+  })();
 
   // Auth toggler: Changes homepage UI based on authentication
   (function () {
@@ -467,6 +602,7 @@
       };
       const cards = requests.map(req => {
         const statusKey = String(req.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+        const status = statusConfig[statusKey] || statusConfig.pending;
         const date = new Date(req.created_at).toLocaleDateString('en-KE', {
           year: 'numeric',
           month: 'short',
