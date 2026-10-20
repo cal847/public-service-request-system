@@ -14,6 +14,15 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const HOME_PAGE = '/html/index.html';
 
+// Run seed data
+if (process.env.SEED_DEMO === 'true') {
+  try {
+    require('./seed-data').seedDemo();
+  } catch (err) {
+    console.error('Demo seeding failed:', err);
+  }
+}
+
 if (isProd && !process.env.SESSION_SECRET) {
   throw new Error('Set SESSION_SECRET before running in production.');
 }
