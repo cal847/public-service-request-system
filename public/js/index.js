@@ -767,6 +767,149 @@
 
   // Fetches User Service Requests and renders them
   const trackContainer = document.getElementById('track-requests-container');
+  const trackCarouselMedia = window.matchMedia('(max-width: 700px)');
+  const trackReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let trackCarouselIndex = 0;
+  let trackCarouselDirection = 1;
+  let trackCarouselTimer = null;
+  let trackScrollTimer = null;
+  let trackHovered = false;
+  let trackFocused = false;
+  let trackFiltersAttached = false;
+
+  function visibleTrackCards() {
+    if (!trackContainer) return [];
+    return Array.from(trackContainer.querySelectorAll('.about-card[data-status]'))
+      .filter((card) => card.style.display !== 'none');
+  }
+
+  function renderTrackCarousel() {
+    const cards = visibleTrackCards();
+    trackContainer.classList.toggle('is-carousel', trackCarouselMedia.matches && cards.length > 1);
+
+    cards.forEach((card, index) => {
+      const distance = Math.abs(index - trackCarouselIndex);
+      card.classList.toggle('is-active', index === trackCarouselIndex);
+      card.classList.toggle('is-neighbor', distance === 1);
+      card.classList.toggle('is-distant', distance > 1);
+    });
+  }
+
+  function scrollToTrackCard(index, smooth) {
+    const cards = visibleTrackCards();
+    const card = cards[index];
+    if (!card || !trackCarouselMedia.matches) return;
+
+    const cardRect = card.getBoundingClientRect();
+    const trackRect = trackContainer.getBoundingClientRect();
+    const center = cardRect.left - trackRect.left + trackContainer.scrollLeft + cardRect.width / 2;
+    trackContainer.scrollTo({
+      left: center - trackContainer.clientWidth / 2,
+      behavior: smooth && !trackReducedMotion.matches ? 'smooth' : 'auto'
+    });
+  }
+
+  function stopTrackCarousel() {
+    if (trackCarouselTimer !== null) {
+      window.clearTimeout(trackCarouselTimer);
+      trackCarouselTimer = null;
+    }
+  }
+
+  function updateTrackCarouselTimer() {
+    stopTrackCarousel();
+    const cards = visibleTrackCards();
+    if (
+      !trackCarouselMedia.matches ||
+      cards.length < 2 ||
+      trackHovered ||
+      trackFocused ||
+      document.hidden ||
+      trackReducedMotion.matches ||
+      document.documentElement.classList.contains('a11y-motion')
+    ) return;
+
+    trackCarouselTimer = window.setTimeout(() => {
+      if (trackCarouselIndex === cards.length - 1) trackCarouselDirection = -1;
+      else if (trackCarouselIndex === 0) trackCarouselDirection = 1;
+      trackCarouselIndex += trackCarouselDirection;
+      renderTrackCarousel();
+      scrollToTrackCard(trackCarouselIndex, true);
+      updateTrackCarouselTimer();
+    }, 6000);
+  }
+
+  function refreshTrackCarousel(reset) {
+    const cards = visibleTrackCards();
+    if (reset || trackCarouselIndex >= cards.length) trackCarouselIndex = 0;
+    renderTrackCarousel();
+    scrollToTrackCard(trackCarouselIndex, false);
+    updateTrackCarouselTimer();
+  }
+
+  if (trackContainer) {
+    trackContainer.setAttribute('aria-label', 'Your service requests. Scroll horizontally to browse.');
+    trackContainer.addEventListener('scroll', () => {
+      if (!trackCarouselMedia.matches) return;
+      window.clearTimeout(trackScrollTimer);
+      trackScrollTimer = window.setTimeout(() => {
+        const cards = visibleTrackCards();
+        if (!cards.length) return;
+        const trackCenter = trackContainer.getBoundingClientRect().left + trackContainer.clientWidth / 2;
+        let nearestIndex = 0;
+        let nearestDistance = Infinity;
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - trackCenter);
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestIndex = index;
+          }
+        });
+        if (nearestIndex !== trackCarouselIndex) {
+          trackCarouselDirection = nearestIndex > trackCarouselIndex ? 1 : -1;
+          trackCarouselIndex = nearestIndex;
+          renderTrackCarousel();
+          updateTrackCarouselTimer();
+        }
+      }, 100);
+    }, { passive: true });
+    trackContainer.addEventListener('mouseenter', () => {
+      trackHovered = true;
+      updateTrackCarouselTimer();
+    });
+    trackContainer.addEventListener('mouseleave', () => {
+      trackHovered = false;
+      updateTrackCarouselTimer();
+    });
+    trackContainer.addEventListener('focusin', () => {
+      trackFocused = true;
+      updateTrackCarouselTimer();
+    });
+    trackContainer.addEventListener('focusout', (event) => {
+      if (!trackContainer.contains(event.relatedTarget)) {
+        trackFocused = false;
+        updateTrackCarouselTimer();
+      }
+    });
+    trackContainer.addEventListener('keydown', (event) => {
+      if (!trackCarouselMedia.matches || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const cards = visibleTrackCards();
+      trackCarouselDirection = event.key === 'ArrowRight' ? 1 : -1;
+      trackCarouselIndex = Math.max(0, Math.min(cards.length - 1, trackCarouselIndex + trackCarouselDirection));
+      renderTrackCarousel();
+      scrollToTrackCard(trackCarouselIndex, true);
+      updateTrackCarouselTimer();
+    });
+    document.addEventListener('visibilitychange', updateTrackCarouselTimer);
+    trackCarouselMedia.addEventListener('change', () => refreshTrackCarousel(false));
+    trackReducedMotion.addEventListener('change', updateTrackCarouselTimer);
+    new MutationObserver(updateTrackCarouselTimer).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
 
   async function loadServiceRequests() {
     if (!trackContainer) return;
@@ -912,6 +1055,7 @@
       trackContainer.replaceChildren(...cards);
 
       attachTrackFilters();
+      refreshTrackCarousel(true);
 
     } catch (err) {
       console.error('Error loading requests:', err);
@@ -949,6 +1093,9 @@
 
   // Filter Logic
   function attachTrackFilters() {
+    if (trackFiltersAttached) return;
+    trackFiltersAttached = true;
+
     const trackFilters = document.querySelectorAll('.track-filter-btn');
     trackFilters.forEach(btn => {
       btn.addEventListener('click', function() {
@@ -970,6 +1117,7 @@
             card.style.display = 'none';
           }
         });
+        refreshTrackCarousel(true);
       });
     });
   }
