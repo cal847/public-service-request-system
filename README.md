@@ -11,8 +11,10 @@ This web service allows residents to submit service requests to the government s
  - Admins update service request statuses
 
 ## Security Considerations
- - Rate limiting on all public APIs
- - Protected admin ednpoints
+ - Rate limiting on registration and login APIs to prevent Brute Force Attacks. Admin account is locked after **Three** failed attempts
+ - Protected admin endpoints
+ - Restricted image file types and sizes (Max 5MB, only JPEG, PNG and WebP allowed) 
+ - Javascript inserts text rather than HTML to prevent cross-site scripting
 
 ## Features to add
  - Password reset
