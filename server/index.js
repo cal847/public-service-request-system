@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 
 const HOME_PAGE = '/html/index.html';
-const LOGIN_PAGE = '/html/login.html';
 
 if (isProd && !process.env.SESSION_SECRET) {
   throw new Error('Set SESSION_SECRET before running in production.');
@@ -61,13 +60,20 @@ app.use(
   })
 );
 
-// Send admins to their dashboard instead of the public homepage.
-app.get('/', (req, res) => {
+app.get('/index.html', (req, res) => {
   if (req.session.user?.role === 'admin') {
     return res.redirect('/html/admin.html');
   }
 
-  res.redirect('/html/index.html');
+  res.redirect(HOME_PAGE); // /html/index.html
+});
+
+app.get(HOME_PAGE, (req, res, next) => {
+  if (req.session.user?.role === 'admin') {
+    return res.redirect('/html/admin.html');
+  }
+
+  next(); 
 });
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
