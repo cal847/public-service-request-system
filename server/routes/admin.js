@@ -16,7 +16,7 @@ const REQUEST_SELECT = `
          ${iso('r.created_at')} AS created_at, ${iso('r.updated_at')} AS updated_at,
          u.name AS citizen_name, u.email AS citizen_email, u.phone AS citizen_phone
     FROM requests r
-    JOIN users u ON u.id = r.user_id`;
+    LEFT JOIN users u ON u.id = r.user_id`;
 
 const mapRequest = (r) => ({
   id: r.id,
@@ -126,7 +126,7 @@ router.get('/requests', (req, res) => {
   const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
 
   const total = db
-    .prepare(`SELECT COUNT(*) AS n FROM requests r JOIN users u ON u.id = r.user_id ${whereSql}`)
+    .prepare(`SELECT COUNT(*) AS n FROM requests r LEFT JOIN users u ON u.id = r.user_id ${whereSql}`)
     .get(...params).n;
 
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));

@@ -1,7 +1,7 @@
 /**
  * Admin dashboard: stats, request list, details and status updates.
  * All data comes from /api/admin/*. User-supplied text is always inserted
- * with textContent (via the h() helper), never innerHTML.
+ * with textContent.
  */
 (function () {
   'use strict';
@@ -22,8 +22,8 @@
     total: 0,
     filters: { q: '', status: '', category: '' },
     requests: [],
-    updating: null,   // request currently in the status dialog
-    ticket: 0,        // guards against out-of-order responses
+    updating: null,
+    ticket: 0,     
   };
 
   /* ---------- helpers ---------- */
@@ -75,7 +75,7 @@
     const data = await res.json().catch(() => ({}));
 
     if (res.status === 401 || res.status === 403) {
-      location.replace(res.status === 401 ? 'login.html' : 'dashboard.html');
+      location.replace(res.status === 401 ? '../html/login.html' : '../html/admin.html');
       const err = new Error('Redirecting');
       err.handled = true;
       throw err;
@@ -224,8 +224,8 @@
         return h('tr', {},
           h('td', { class: 'code' }, r.trackingCode),
           h('td', {},
-            h('div', {}, r.citizen.name),
-            h('div', { class: 'cell-sub' }, r.citizen.phone || r.citizen.email)),
+            h('div', {}, r.citizen.name || 'Guest'),
+            h('div', { class: 'cell-sub' }, r.citizen.phone || r.citizen.email || 'No contact details found')),
           h('td', {}, r.category),
           h('td', { class: 'cell-loc' }, r.location),
           h('td', {}, pill(r.status)),
@@ -246,7 +246,7 @@
 
     try {
       const data = await api(`/api/admin/requests?${params}`);
-      if (ticket !== state.ticket) return; // a newer search is already in flight
+      if (ticket !== state.ticket) return;
 
       state.requests = data.requests;
       state.page = data.page;

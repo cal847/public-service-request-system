@@ -108,6 +108,7 @@
       <a href="#about" id="nav-track">About</a>
       <a href="#">Quick Links</a>
       <a href="#">Help &amp; Support</a>
+      <input class="search" placeholder="Search service request via tracking code">
     </nav>
   </div>
 
@@ -138,9 +139,12 @@
 
         <div class="field span-2">
           <label for="location">Location</label>
-          <input id="location" name="location" type="text" maxlength="120" required
-                 placeholder="e.g. Kenol Market, near the bus stage"
-                 aria-describedby="location-error">
+          <select id="category" name="category" required aria-describedby="category-error">
+            <option value="">Select your location...</option>
+            <option>Murang'a</option>
+            <option>Kangari</option>
+            <option>Kenol</option>
+          </select>
           <p class="field-error" id="location-error" data-error-for="location"></p>
         </div>
 
