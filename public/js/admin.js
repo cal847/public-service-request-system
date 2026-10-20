@@ -47,6 +47,7 @@
   const pill = (status) => h('span', { class: `pill pill-${STATUS_CLASS[status]}` }, status);
   const percent = (part, whole) => (whole ? Math.round((part / whole) * 100) : 0);
 
+  // Sets date format eg Tuesday October
   const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const dateTimeFmt = new Intl.DateTimeFormat('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
