@@ -408,6 +408,7 @@
       $('trackModalTitle').textContent = r.trackingCode;
       $('tmStatus').replaceChildren(pill(r.status), el('span', 'cat', r.category));
       $('tmSubmitted').textContent = dateFmt.format(new Date(r.createdAt));
+      $('tmResponded').textContent = latest ? dateFmt.format(new Date(latest.createdAt)) : 'N/A';
 
       var noteText = latest && latest.note ? latest.note :  'No response from the county yet. Please check back soon.';
       $('tmMessage').textContent = noteText;
@@ -564,12 +565,21 @@
   async function loadServiceRequests() {
     if (!trackContainer) return;
 
-    trackContainer.innerHTML = `
-      <article class="about-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-        <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--green); animation: spin 1s linear infinite;">progress_activity</span>
-        <h3 style="margin-top: 1rem;">Loading your requests...</h3>
-      </article>
-    `;
+    const loadingCard = document.createElement('article');
+    loadingCard.className = 'about-card';
+    loadingCard.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem;';
+
+    const loadingIcon = document.createElement('span');
+    loadingIcon.className = 'material-symbols-outlined';
+    loadingIcon.style.cssText = 'font-size:3rem;color:var(--green);animation:spin 1s linear infinite;';
+    loadingIcon.textContent = 'progress_activity';
+
+    const loadingTitle = document.createElement('h3');
+    loadingTitle.style.marginTop = '1rem';
+    loadingTitle.textContent = 'Loading your requests...';
+
+    loadingCard.append(loadingIcon, loadingTitle);
+    trackContainer.replaceChildren(loadingCard);
 
     try {
       const res = await fetch('/api/service-requests/me', { 
@@ -579,19 +589,40 @@
 
       if (!res.ok) throw new Error('Failed to fetch requests');
 
-      const requests = await res.json();
+      const data = await res.json();
+      const requests = data.requests;
 
       if (!Array.isArray(requests)) throw new Error('Invalid requests response');
 
       if (requests.length === 0) {
-        trackContainer.innerHTML = `
-          <article class="about-card" style="grid-column: 1 / -1; text-align: center;">
-            <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">inbox</span></span>
-            <h3>No Active Requests</h3>
-            <p>You currently have no service requests in progress. Submit a new request to get started.</p>
-            <a href="../html/submit-request.html" class="primary-button main-button" style="margin-top: 1rem; text-decoration: none; display: inline-block;">Submit New Request</a>
-          </article>
-        `;
+        const emptyCard = document.createElement('article');
+        emptyCard.className = 'about-card';
+        emptyCard.style.cssText = 'grid-column:1/-1;text-align:center;';
+
+        const emptyIcon = document.createElement('span');
+        emptyIcon.className = 'about-icon';
+
+        const emptyIconSymbol = document.createElement('span');
+        emptyIconSymbol.className = 'material-symbols-outlined';
+        emptyIconSymbol.setAttribute('aria-hidden', 'true');
+        emptyIconSymbol.textContent = 'inbox';
+        emptyIcon.append(emptyIconSymbol);
+
+        const emptyTitle = document.createElement('h3');
+        emptyTitle.textContent = 'No Active Requests';
+
+        const emptyMessage = document.createElement('p');
+        emptyMessage.textContent =
+          'You currently have no service requests in progress. Submit a new request to get started.';
+
+        const submitLink = document.createElement('a');
+        submitLink.href = '#request';
+        submitLink.className = 'primary-button main-button';
+        submitLink.style.cssText = 'margin-top:1rem;text-decoration:underline;display:inline-block;';
+        submitLink.textContent = 'Submit New Request';
+
+        emptyCard.append(emptyIcon, emptyTitle, emptyMessage, submitLink);
+        trackContainer.replaceChildren(emptyCard);
         return;
       }
 
@@ -603,7 +634,7 @@
       const cards = requests.map(req => {
         const statusKey = String(req.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
         const status = statusConfig[statusKey] || statusConfig.pending;
-        const date = new Date(req.created_at).toLocaleDateString('en-KE', {
+        const date = new Date(req.createdAt).toLocaleDateString('en-KE', {
           year: 'numeric',
           month: 'short',
           day: 'numeric'
@@ -644,6 +675,14 @@
           'display:flex;justify-content:space-between;align-items:center;font-size:.85rem;' +
           'color:#888;border-top:1px solid var(--green-border,#eee);padding-top:.75rem;';
 
+        const trackingCode = document.createElement('p');
+        trackingCode.textContent = `Tracking code: ${req.trackingCode}`;
+
+        const response = document.createElement('p');
+        response.textContent = req.latestUpdate
+          ? `Message from the county: ${req.latestUpdate.note}`
+          : 'No update from the county yet.';
+
         const location = document.createElement('span');
         location.style.cssText = 'display:flex;align-items:center;gap:.25rem;';
 
@@ -659,7 +698,7 @@
         const dateText = document.createElement('span');
         dateText.textContent = date;
         details.append(location, dateText);
-        card.append(badge, title, description, details);
+        card.append(badge, title, trackingCode, description, details, response);
 
         return card;
       });

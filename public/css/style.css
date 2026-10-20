@@ -731,7 +731,7 @@ html.a11y-contrast .tm-message { background: #1b3d28; }
 }
 
 /* ---------- Buttons ---------- */
-.btn-secondary {
+.btn-primary, .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;

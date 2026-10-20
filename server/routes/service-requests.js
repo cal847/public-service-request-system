@@ -158,19 +158,42 @@ router.post('/', submitLimiter, handleUpload, (req, res) => {
   }
 });
 
-/* ---------- GET /api/service-request/me -> the signed-in citizen's own requests ---------- */
+/* ---------- GET /api/service-requests/me -> the signed-in citizen's own requests ---------- */
 router.get('/me', requireAuth, (req, res) => {
   const rows = db
     .prepare(
-      `SELECT tracking_code, category, location, description, status,
-              ${iso('created_at')} AS created_at, ${iso('updated_at')} AS updated_at
-         FROM requests
-        WHERE user_id = ?
-        ORDER BY created_at DESC, id DESC`
+      `SELECT r.tracking_code, r.category, r.location, r.description, r.status,
+              ${iso('created_at')} AS created_at, ${iso('updated_at')} AS updated_at,
+              (
+                SELECT h.note
+                  FROM request_history h
+                WHERE h.request_id = r.id
+                  AND h.from_status IS NOT NULL
+                  AND h.note IS NOT NULL
+                ORDER BY h.id DESC
+                LIMIT 1
+              ) AS latest_note,
+              (
+                SELECT ${iso('h.created_at')}
+                  FROM request_history h
+                WHERE h.request_id = r.id
+                  AND h.from_status IS NOT NULL
+                  AND h.note IS NOT NULL
+                ORDER BY h.id DESC
+                LIMIT 1
+              ) AS latest_note_created_at
+         FROM requests r
+        WHERE r.user_id = ?
+        ORDER BY r.created_at DESC, r.id DESC`
     )
     .all(req.session.user.id);
 
-  res.json({ requests: rows.map(mapRequest), count: rows.length });
+  const requests = rows.map((row) => ({
+    ...mapRequest(row),
+    latestUpdate: row.latest_note ?  {note: row.latest_note, createdAt :row.latest_note_created_at} : null,
+  }));
+  
+  res.json({ requests, count: requests.length });
 });
 
 /* ---------- GET /api/service-request/track/:code -> looks up request using the tracking code ---------- */
