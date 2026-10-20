@@ -43,12 +43,23 @@ app.use(
   })
 );
 
-// Admins load admin page, everyone else is redirected to home page
-app.get('/admin.html', (req, res, next) => {
-    const user = req.session.user;
-    if (!user) return res.redirect('/login.html');
-    if (user.role !== 'admin') return res.redirect('../html/index.html')
-})
+// Send admins to their dashboard instead of the public homepage.
+app.get('/', (req, res) => {
+  if (req.session.user?.role === 'admin') {
+    return res.redirect('/admin.html');
+  }
+
+  res.redirect('/index.html');
+});
+
+// Non-admins get redirected to index.html
+app.get('/index.html', (req, res, next) => {
+  if (req.session.user?.role === 'admin') {
+    return res.redirect('/admin.html');
+  }
+
+  next();
+});
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.listen(PORT, () => console.log(`Running at http://localhost:${PORT}`));

@@ -67,9 +67,15 @@ body::before {
 
 /* Keep the patterns out of the way in high contrast mode */
 html.a11y-contrast body::before,
-html.a11y-contrast body::after { display: none; }
-html.a11y-contrast .site-header { background: transparent; }
+html.a11y-contrast body::after {
+  display: none;
+}
+html.a11y-contrast .site-header {
+  background: transparent;
+}
 
 @media (max-width: 700px) {
-  .services-wrap { padding-bottom: clamp(5rem, 24vw, 8rem); }
+  .services-wrap {
+    padding-bottom: clamp(5rem, 24vw, 8rem);
+  }
 }
