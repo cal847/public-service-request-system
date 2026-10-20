@@ -120,6 +120,160 @@
   apply();
 })();
 
+// About section carousel
+(function () {
+  'use strict';
+
+  var carousel = document.getElementById('about');
+  var track = carousel && carousel.querySelector('.about-grid');
+  if (!track) return;
+
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.about-card'));
+  var current = 0;
+  var timer = null;
+  var scrollTimer = null;
+  var direction = 1;
+  var delay = 6000;
+  var hovered = false;
+  var focused = false;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (slides.length < 2) return;
+
+  carousel.setAttribute('role', 'region');
+  carousel.setAttribute('aria-roledescription', 'carousel');
+  carousel.setAttribute('aria-label', 'About this portal');
+  track.setAttribute('tabindex', '0');
+  track.setAttribute('aria-label', 'Scroll horizontally through information about this portal');
+
+  function render() {
+    slides.forEach(function (slide, index) {
+      var distance = Math.abs(index - current);
+      slide.classList.toggle('is-active', index === current);
+      slide.classList.toggle('is-neighbor', distance === 1);
+      slide.classList.toggle('is-distant', distance > 1);
+      slide.classList.toggle('is-before', index < current);
+      slide.classList.toggle('is-after', index > current);
+      slide.setAttribute('aria-roledescription', 'slide');
+      slide.setAttribute('aria-label', (index + 1) + ' of ' + slides.length + ': ' +
+        slide.querySelector('h3').textContent);
+    });
+  }
+
+  function nearestSlideIndex() {
+    var center = track.scrollLeft + track.clientWidth / 2;
+    var nearest = 0;
+    var distance = Infinity;
+
+    slides.forEach(function (slide, index) {
+      var rect = slide.getBoundingClientRect();
+      var trackRect = track.getBoundingClientRect();
+      var slideCenter = rect.left - trackRect.left + track.scrollLeft + rect.width / 2;
+      var nextDistance = Math.abs(slideCenter - center);
+      if (nextDistance < distance) {
+        nearest = index;
+        distance = nextDistance;
+      }
+    });
+    return nearest;
+  }
+
+  function scrollToSlide(index, smooth) {
+    var slide = slides[index];
+    var rect = slide.getBoundingClientRect();
+    var trackRect = track.getBoundingClientRect();
+    var slideCenter = rect.left - trackRect.left + track.scrollLeft + rect.width / 2;
+    var left = slideCenter - track.clientWidth / 2;
+    track.scrollTo({
+      left: left,
+      behavior: smooth && !reducedMotion.matches ? 'smooth' : 'auto'
+    });
+  }
+
+  function stopTimer() {
+    if (timer !== null) {
+      window.clearTimeout(timer);
+      timer = null;
+    }
+  }
+
+  function shouldPause() {
+    return hovered || focused || document.hidden ||
+      reducedMotion.matches || document.documentElement.classList.contains('a11y-motion');
+  }
+
+  function updateTimer() {
+    stopTimer();
+    if (!shouldPause()) {
+      timer = window.setTimeout(function advance() {
+        if (current === slides.length - 1) direction = -1;
+        else if (current === 0) direction = 1;
+        current += direction;
+        render();
+        scrollToSlide(current, true);
+        updateTimer();
+      }, delay);
+    }
+  }
+
+  track.addEventListener('scroll', function () {
+    window.clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(function () {
+      var nextIndex = nearestSlideIndex();
+      if (nextIndex !== current) direction = nextIndex > current ? 1 : -1;
+      current = nextIndex;
+      render();
+      updateTimer();
+    }, 100);
+  }, { passive: true });
+
+  carousel.addEventListener('mouseenter', function () {
+    hovered = true;
+    updateTimer();
+  });
+  carousel.addEventListener('mouseleave', function () {
+    hovered = false;
+    updateTimer();
+  });
+  carousel.addEventListener('focusin', function () {
+    focused = true;
+    updateTimer();
+  });
+  carousel.addEventListener('focusout', function (event) {
+    if (!carousel.contains(event.relatedTarget)) {
+      focused = false;
+      updateTimer();
+    }
+  });
+  track.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      direction = 1;
+      current = Math.min(current + 1, slides.length - 1);
+      render();
+      scrollToSlide(current, true);
+      updateTimer();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      direction = -1;
+      current = Math.max(current - 1, 0);
+      render();
+      scrollToSlide(current, true);
+      updateTimer();
+    }
+  });
+  document.addEventListener('visibilitychange', updateTimer);
+  reducedMotion.addEventListener('change', updateTimer);
+  new MutationObserver(updateTimer).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  render();
+  window.requestAnimationFrame(function () { scrollToSlide(current, false); });
+  updateTimer();
+})();
+
 // Service Request Form
 (function () {
   'use strict';
@@ -135,12 +289,65 @@
   var preview = $('uploadPreview');
   var previewImg = $('previewImg');
   var previewUrl = null;
+  var copyToast = null;
+  var copyToastTimer = null;
 
   var MAX_BYTES = 5 * 1024 * 1024;
   var IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
   var CATEGORIES = ['Streetlight', 'Water', 'Garbage collection', 'Roads', 'Other'];
 
   var dateFmt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'short' });
+
+  function showCopyToast(message, isError) {
+    if (!copyToast) {
+      copyToast = document.createElement('div');
+      copyToast.className = 'copy-toast';
+      copyToast.setAttribute('role', 'status');
+      copyToast.setAttribute('aria-live', 'polite');
+      document.body.append(copyToast);
+    }
+
+    copyToast.textContent = message;
+    copyToast.classList.toggle('is-error', !!isError);
+    copyToast.classList.add('is-visible');
+    window.clearTimeout(copyToastTimer);
+    copyToastTimer = window.setTimeout(function () {
+      copyToast.classList.remove('is-visible');
+    }, 3000);
+  }
+
+  function copyText(value) {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      return Promise.reject(new Error('Clipboard access is unavailable.'));
+    }
+    return navigator.clipboard.writeText(value);
+  }
+
+  document.querySelectorAll('.contact-text:not(a)').forEach(function (number) {
+    var phone = number.textContent.replace(/[^\d+]/g, '');
+    if (!phone) return;
+
+    var link = document.createElement('a');
+    link.className = number.className;
+    link.href = 'tel:' + phone;
+    while (number.firstChild) link.append(number.firstChild);
+    number.replaceWith(link);
+  });
+
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href^="tel:"]');
+    if (!link || window.matchMedia('(max-width: 700px)').matches) return;
+
+    event.preventDefault();
+    var phone = link.getAttribute('href').slice(4);
+    copyText(phone).then(function () {
+      $('copyStatus').textContent = 'Copied!';
+      showCopyToast('Copied!');
+    }).catch(function () {
+      $('copyStatus').textContent = 'Could not copy the phone number.';
+      showCopyToast('Could not copy', true);
+    });
+  });
 
   /* ---------- helpers ---------- */
   function setFieldError(name, message) {
@@ -290,14 +497,13 @@
   $('copyCode').addEventListener('click', function () {
     var code = $('trackingCode').textContent;
     var status = $('copyStatus');
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).then(
-        function () { status.textContent = 'Tracking code copied.'; },
-        function () { status.textContent = 'Could not copy. Select the code and press Ctrl+C.'; }
-      );
-    } else {
-      status.textContent = 'Select the code and press Ctrl+C to copy it.';
-    }
+    copyText(code).then(function () {
+      status.textContent = 'Copied!';
+      showCopyToast('Copied!');
+    }).catch(function () {
+      status.textContent = 'Could not copy. Select the code and press Ctrl+C.';
+      showCopyToast('Could not copy', true);
+    });
   });
 
   $('newRequest').addEventListener('click', function () {
