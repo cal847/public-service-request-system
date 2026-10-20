@@ -1,7 +1,6 @@
 /**
  * Admin dashboard: stats, request list, details and status updates.
- * All data comes from /api/admin/*. User-supplied text is always inserted
- * with textContent.
+ * User-supplied text is always inserted with textContent to prevent HTML injection attacks.
  */
 (function () {
   'use strict';
@@ -29,20 +28,20 @@
   /* ---------- helpers ---------- */
 
   /** Tiny element builder. Strings become text nodes, so nothing is parsed as HTML. */
-  function h(tag, attrs, ...children) {
-    const node = document.createElement(tag);
-    for (const [key, value] of Object.entries(attrs || {})) {
-      if (value == null || value === false) continue;
-      if (key === 'class') node.className = value;
-      else if (key === 'style') Object.entries(value).forEach(([p, v]) => node.style.setProperty(p, v));
-      else node.setAttribute(key, value === true ? '' : value);
-    }
-    for (const child of children.flat()) {
-      if (child == null || child === false) continue;
-      node.append(child);
-    }
-    return node;
-  }
+  // function h(tag, attrs, ...children) {
+  //   const node = document.createElement(tag);
+  //   for (const [key, value] of Object.entries(attrs || {})) {
+  //     if (value == null || value === false) continue;
+  //     if (key === 'class') node.className = value;
+  //     else if (key === 'style') Object.entries(value).forEach(([p, v]) => node.style.setProperty(p, v));
+  //     else node.setAttribute(key, value === true ? '' : value);
+  //   }
+  //   for (const child of children.flat()) {
+  //     if (child == null || child === false) continue;
+  //     node.append(child);
+  //   }
+  //   return node;
+  // }
 
   const icon = (name) => h('span', { class: 'material-symbols-outlined icon', 'aria-hidden': 'true' }, name);
   const pill = (status) => h('span', { class: `pill pill-${STATUS_CLASS[status]}` }, status);
