@@ -1,0 +1,21 @@
+{
+  "name": "murangas-public-services",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
+    "multer": "^2.4.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true
+  }
+}

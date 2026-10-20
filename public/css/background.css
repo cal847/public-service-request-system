@@ -17,16 +17,20 @@ body::before {
 }
 
 /* Rolling hills sitting at the very bottom of the page */
-body::after {
+.request-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.request-wrap::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: -1;
-  height: clamp(120px, 18vw, 240px);
+  height: clamp(1100px, 18000vw, 1200px);
   pointer-events: none;
-  background: url('images/hills.svg') bottom center / 100% 100% no-repeat;
+  background: url('../images/hills.svg') bottom center / 100% 100% no-repeat;
 }
 
 .services-wrap {
@@ -46,7 +50,7 @@ body::after {
   opacity: 0.5;
 
   background:
-    url('images/leaves.svg') 0 0 / 550px 550px repeat;
+    url('../images/leaves.svg') 0 0 / 550px 550px repeat;
 }
 
 /* Contour-wave texture over the header's green gradient */

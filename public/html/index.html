@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    try {
+      var t = localStorage.getItem('mcps-theme');
+      if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Murang'a County Public Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=block">
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/background.css"/>
+</head>
+<body>
+  <a class="skip-link" href="#services">Skip to services</a>
+
+  <header class="site-header">
+    <div class="top-bar">
+      <a class="brand" href="#" aria-label="Murang'a County Public Services home">
+        <img class="brand-logo" src="../images/logo.jpeg" alt="Murang'a County coat of arms">
+        <span class="brand-name">MURANG'A COUNTY<br>PUBLIC SERVICES PORTAL</span>
+      </a>
+
+      <div class="contacts">
+        <div class="contact">
+          <svg class="icon icon-xl" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.6">
+            <rect x="3" y="5" width="17" height="17" rx="2.5"/>
+            <path d="M20 10h5.2a2 2 0 0 1 1.7 1l2.6 4.4a2 2 0 0 1 .3 1V22H20"/>
+            <path d="M11.5 9.5v8M7.5 13.5h8"/>
+            <circle cx="9" cy="24.5" r="2.4" fill="#fff"/>
+            <circle cx="23.5" cy="24.5" r="2.4" fill="#fff"/>
+          </svg>
+          <span class="contact-text"><span class="visually-hidden">Emergency ambulance: </span>+254716017296</span>
+        </div>
+        <div class="contact">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.5">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <a class="contact-text contact-link" href="tel:+254757562988">+254 757 562 988</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+          <span class="material-symbols-outlined icon" aria-hidden="true">dark_mode</span>
+        </button>
+      </div>
+
+      
+
+      <div class="top-actions">
+        <div class="a11y" id="a11y">
+          <button class="a11y-toggle" id="a11yToggle" type="button" aria-expanded="false" aria-controls="a11yMenu" aria-label="Accessibility options">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+              <path d="M0 0h512v512H0z" fill="none" />
+              <path fill="currentColor" d="M256 112a56 56 0 1 1 56-56a56.06 56.06 0 0 1-56 56" />
+              <path fill="currentColor" d="m432 112.8l-.45.12l-.42.13c-1 .28-2 .58-3 .89c-18.61 5.46-108.93 30.92-172.56 30.92c-59.13 0-141.28-22-167.56-29.47a74 74 0 0 0-8-2.58c-19-5-32 14.3-32 31.94c0 17.47 15.7 25.79 31.55 31.76v.28l95.22 29.74c9.73 3.73 12.33 7.54 13.6 10.84c4.13 10.59.83 31.56-.34 38.88l-5.8 45l-32.19 176.19q-.15.72-.27 1.47l-.23 1.27c-2.32 16.15 9.54 31.82 32 31.82c19.6 0 28.25-13.53 32-31.94s28-157.57 42-157.57s42.84 157.57 42.84 157.57c3.75 18.41 12.4 31.94 32 31.94c22.52 0 34.38-15.74 32-31.94a57 57 0 0 0-.76-4.06L329 301.27l-5.79-45c-4.19-26.21-.82-34.87.32-36.9a1 1 0 0 0 .08-.15c1.08-2 6-6.48 17.48-10.79l89.28-31.21a17 17 0 0 0 1.62-.52c16-6 32-14.3 32-31.93S451 107.81 432 112.8" />
+            </svg>
+          </button>
+
+          <div class="a11y-menu" id="a11yMenu" role="dialog" aria-label="Accessibility settings" hidden>
+            <div class="a11y-head">
+              <h2>Accessibility</h2>
+              <button class="a11y-close" id="a11yClose" type="button" aria-label="Close accessibility menu">&times;</button>
+            </div>
+
+            <div class="a11y-row">
+              <span class="a11y-label" id="textSizeLabel">Text size</span>
+              <div class="stepper" role="group" aria-labelledby="textSizeLabel">
+                <button type="button" id="sizeDown" aria-label="Decrease text size">A&minus;</button>
+                <output id="sizeValue" aria-live="polite">100%</output>
+                <button type="button" id="sizeUp" aria-label="Increase text size">A+</button>
+              </div>
+            </div>
+
+            <ul class="a11y-options">
+              <li><button type="button" class="a11y-opt" data-feature="contrast" aria-pressed="false">High contrast</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="gray" aria-pressed="false">Grayscale</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="links" aria-pressed="false">Highlight links</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="readable" aria-pressed="false">Readable font</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="spacing" aria-pressed="false">Increase spacing</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="cursor" aria-pressed="false">Large cursor</button></li>
+              <li><button type="button" class="a11y-opt" data-feature="motion" aria-pressed="false">Pause animations</button></li>
+            </ul>
+
+            <button type="button" class="a11y-reset" id="a11yReset">Reset all</button>
+          </div>
+        </div>
+
+        <a class="signin" id="auth-btn" href="../html/login.html">
+          <span class="material-symbols-outlined icon" id="auth-icon" aria-hidden="true">fingerprint</span>
+          <span id="auth-text">Sign In</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-bar">
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Main">
+      <a href="#" aria-current="page">Home</a>
+      <a href="#about" id="nav-track">About</a>
+      <a href="#">Quick Links</a>
+      <a href="#">Help &amp; Support</a>
+    </nav>
+    <form class="track-search" id="trackSearch" role="search" autocomplete="off">
+        <label class="visually-hidden" for="trackInput">Search a request by tracking code</label>
+        <div class="track-field">
+          <span class="material-symbols-outlined icon" aria-hidden="true">search</span>
+          <input id="trackInput" type="search" placeholder="Search via tracking code"
+                maxlength="20" spellcheck="false" autocapitalize="characters"
+                aria-controls="trackResult">
+        </div>
+        <div class="track-result" id="trackResult" role="status" aria-live="polite" hidden></div>
+      </form>
+  </div>
+
+  <!-- ========== Service Request Submission Form ========== -->
+  <main id="request" class="request-wrap" tabindex="-1">
+    <section class="request-card" aria-labelledby="requestTitle">
+      <h1 id="requestTitle">Submit a Service Request</h1>
+      <p class="request-sub">
+        Report a problem in your area, such as a broken streetlight, a water issue or missed
+        garbage collection. You'll get a tracking code to follow its progress.
+      </p>
+      
+      <p class="form-alert" id="requestAlert" role="alert" hidden></p>
+
+      <form id="requestForm" class="form-grid">
+        <div class="field span-2">
+          <label for="category">Category</label>
+          <select id="category" name="category" required aria-describedby="category-error">
+            <option value="">Select a category…</option>
+            <option>Streetlight</option>
+            <option>Water</option>
+            <option>Garbage collection</option>
+            <option>Roads</option>
+            <option>Other</option>
+          </select>
+          <p class="field-error" id="category-error" data-error-for="category"></p>
+        </div>
+
+        <div class="field span-2">
+          <label for="location">Location</label>
+          <select id="location" name="location" required aria-describedby="category-error">
+            <option value="">Select your location...</option>
+            <option>Murang'a</option>
+            <option>Kangari</option>
+            <option>Kenol</option>
+          </select>
+          <p class="field-error" id="location-error" data-error-for="location"></p>
+        </div>
+
+        <div class="field span-2">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="5" maxlength="1000" required
+                    placeholder="Tell us what is wrong and how long it has been happening."
+                    aria-describedby="description-count description-error"></textarea>
+          <p class="char-count" id="description-count">0 / 1000</p>
+          <p class="field-error" id="description-error" data-error-for="description"></p>
+        </div>
+
+        <div class="field span-2">
+          <label for="image">Photo <span class="optional">(optional)</span></label>
+          <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+                 aria-describedby="image-hint image-error">
+          <p class="field-hint" id="image-hint">JPG, PNG or WebP, up to 5 MB.</p>
+          <p class="field-error" id="image-error" data-error-for="image"></p>
+
+          <div class="upload-preview" id="uploadPreview" hidden>
+            <img id="previewImg" alt="Preview of the selected photo">
+            <button type="button" class="btn-link" id="removeImage">Remove photo</button>
+          </div>
+        </div>
+
+        <div class="span-2">
+          <button type="submit" class="btn-primary" id="submitRequest">Submit request</button>
+        </div>
+      </form>
+
+      <!-- Shown after a successful submission -->
+      <div class="request-success" id="requestSuccess" hidden tabindex="-1">
+        <span class="material-symbols-outlined success-icon" aria-hidden="true">check_circle</span>
+        <h2>Request submitted</h2>
+        <p>Keep this tracking code to follow your request.</p>
+        <p class="tracking-code" id="trackingCode"></p>
+        <p class="success-meta" id="successMeta"></p>
+        <div class="success-actions">
+          <button type="button" class="btn-secondary" id="copyCode">Copy code</button>
+          <a class="btn-secondary" href="#track">View my requests</a>
+          <button type="button" class="btn-primary btn-inline" id="newRequest">Submit another</button>
+        </div>
+        <p class="visually-hidden" id="copyStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+    <!-- ========== About ========== -->
+  <section class="about" id="about" aria-labelledby="aboutTitle">
+    <div class="about-head">
+      <h2 id="aboutTitle">About This Portal</h2>
+      <p>
+        The Murang'a County Public Services Portal brings county services together in one place,
+        so residents can find what they need, apply, and get help without going from office to office.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">hub</span></span>
+        <h3>One Portal, Many Services</h3>
+        <p>Business permits, liquor licenses, building permits, land, property, parking and health services are all listed on the home page.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">edit_document</span></span>
+        <h3>Apply Online</h3>
+        <p>Start your application from your phone or computer through the county's online services, whenever it suits you.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">search</span></span>
+        <h3>Find Services Fast</h3>
+        <p>Use the search icon to look up a service by name. If we don't offer it, the portal tells you straight away.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">accessibility_new</span></span>
+        <h3>Accessible to Everyone</h3>
+        <p>Change the text size, contrast, spacing, font and more from the accessibility button at the top of the page.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">phone_in_talk</span></span>
+        <h3>Help When You Need It</h3>
+        <p>Ambulance, call centre and fire hotline numbers are always at the bottom of the page, along with our email addresses.</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">volunteer_activism</span></span>
+        <h3>Built for Residents</h3>
+        <p>We aim to serve the people of Murang'a with integrity, and to make county services accountable, efficient and effective.</p>
+      </article>
+    </div>
+  </section>
+  
+  <!-- ========== Track My Services ========== -->
+  <section class="about" id="track" hidden aria-labelledby="trackTitle">
+    <div class="about-head">
+      <h2 id="trackTitle">Track My Service Requests</h2>
+      <p>
+        View the status of your submitted requests (Pending, In Progress, or Resolved) 
+        and manage your interactions with Murang'a County services.
+      </p>
+    </div>
+    <div class="track-filters" role="tablist" aria-label="Filter service requests by status">
+      <button class="track-filter-btn active" role="tab" aria-selected="true" data-status="all">All Requests</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="pending">Pending</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="in-progress">In Progress</button>
+      <button class="track-filter-btn" role="tab" aria-selected="false" data-status="resolved">Resolved</button>
+    </div>
+
+    <!-- index.js dynamically injects request cards into this container -->
+    <div class="about-grid" id="track-requests-container">
+      <article class="about-card">
+        <span class="about-icon"><span class="material-symbols-outlined" aria-hidden="true">pending_actions</span></span>
+        <h3>No Active Requests</h3>
+        <p>You currently have no service requests in progress. Submit a new request to get started.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-col footer-about">
+        <h2 class="footer-title">Murang'a County</h2>
+        <p>
+          At Murang'a County, we are dedicated to transform the livelihood of the people of
+          Murang’a county on a foundation of integrity through accountable, efficient and
+          effective leadership.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Social Info</h2>
+        <ul class="social-list">
+          <li>
+            <a href="#" aria-label="Murang'a County on Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.5-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.2-.2-2.2-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.5v3H11V21h2.5z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="#" aria-label="Murang'a County on X">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-6l-4.7-6.2L5.6 21h-3l7-8.1L2.3 3h6.1l4.2 5.6L17.5 3zm-1 16.2h1.7L7.6 4.7H5.8l10.7 14.5z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="#" aria-label="Murang'a County on YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Quick Links</h2>
+        <ul class="footer-links">
+          <li><a href="https://apply.muranga.go.ke/">Job Application Portal</a></li>
+          <li><a href="https://lands.muranga.go.ke/">Lands Services</a></li>
+          <li><a href="https://eservices.muranga.go.ke/">SBP Licenses</a></li>
+          <li><a href="https://eservices.muranga.go.ke/">Liquor Licenses</a></li>
+          <li><a href="https://cp-34.webhostbox.net:2096/">Staff Emails</a></li>
+          <li><a href="https://ecitizen.muranga.go.ke/">E-Services</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Get In Touch</h2>
+        <ul class="footer-contact">
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+            <span>P.O Box 52 - 10200 Murang'a</span>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">call</span>
+            <a href="tel:+254757562988">+254 757 562 988</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+            <a href="mailto:info@muranga.go.ke">info@muranga.go.ke</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+            <a href="mailto:complain@muranga.go.ke">complain@muranga.go.ke</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-title">Quick Contacts</h2>
+        <ul class="quick-contacts">
+          <li>
+            <span class="qc-label">Ambulance</span>
+            <a href="tel:+254716017296"><span class="material-symbols-outlined" aria-hidden="true">call</span> 0716 017 296</a>
+          </li>
+          <li>
+            <span class="qc-label">Call Center</span>
+            <a href="tel:+254757562988"><span class="material-symbols-outlined" aria-hidden="true">call</span> 0757 562 988</a>
+          </li>
+          <li>
+            <span class="qc-label">Fire Hotline</span>
+            <a href="tel:0800721800"><span class="material-symbols-outlined" aria-hidden="true">call</span> 080 072 1800</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 - 2027 </p>
+    </div>
+  </footer>
+
+    <!-- Request details (opened from the tracking-code search) -->
+  <dialog class="track-modal" id="trackModal" aria-labelledby="trackModalTitle">
+    <div class="tm-head">
+      <h2 class="tm-title" id="trackModalTitle"></h2>
+      <button type="button" class="tm-close" id="trackModalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="tm-body">
+      <div class="tm-status" id="tmStatus"></div>
+      <dl class="tm-list">
+        <dt>Date submitted</dt>
+        <dd id="tmSubmitted"></dd>
+        <dt>Date responded</dt>
+        <dd id="tmResponded"></dd>
+        <dt>Message from the admin</dt>
+        <dd class="tm-message" id="tmMessage"></dd>
+      </dl>
+    </div>
+    <div class="tm-foot">
+      <button type="button" class="tm-btn" id="trackModalDone">Close</button>
+    </div>
+  </dialog>
+
+  <script src="../js/index.js"></script>
+</body>
+</html>
