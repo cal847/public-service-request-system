@@ -3,7 +3,9 @@
   --surface: #fff;
   --surface-2: #f4f9f6;
   --text-soft: rgba(0, 0, 0, 0.65);
-  --amber: #f79009;
+  --amber: #e8be86a1;
+  --chart-green: #5dad79;
+  --chart-orange: #e1a364;
   --pending-bg: #fef0c7;   --pending-fg: #93370d;
   --progress-bg: #d1e9ff;  --progress-fg: #175cd3;
   --danger: #b42318;
@@ -12,7 +14,9 @@ html[data-theme="dark"] {
   --surface: var(--dm-surface);
   --surface-2: rgba(255, 255, 255, 0.05);
   --text-soft: var(--dm-text-soft);
-  --amber: #fdb022;
+  --amber: #9b7938;
+  --chart-green: #2cb45984;
+  --chart-orange: #ac713a;
   --pending-bg: rgba(247, 144, 9, 0.2);   --pending-fg: #fdb022;
   --progress-bg: rgba(46, 144, 250, 0.2); --progress-fg: #84caff;
   --danger: #ff9b8f;
@@ -332,10 +336,10 @@ textarea.control {
   border-radius: 50%;
 }
 .dot-resolved {
-  background: var(--green);
+  background: var(--chart-green);
 }
 .dot-open {
-  background: var(--amber);
+  background: var(--chart-orange);
   margin-left: 0.5rem;
 }
 .empty {
@@ -358,7 +362,7 @@ textarea.control {
   width: 9rem;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: conic-gradient(var(--green) calc(var(--p) * 1%), var(--amber) 0);
+  background: conic-gradient(var(--chart-green) calc(var(--p) * 1%), var(--chart-orange) 0);
 }
 .donut--empty {
   background: rgba(128, 128, 128, 0.25);
@@ -420,7 +424,7 @@ textarea.control {
 .trend-bar {
   min-height: 2px;
   border-radius: 6px 6px 0 0;
-  background: var(--green);
+  background: var(--chart-green);
 }
 .trend-label {
   margin-top: 0.4rem;
@@ -449,10 +453,10 @@ textarea.control {
   height: 100%;
 }
 .bar-fill .seg-resolved {
-  background: var(--green);
+  background: var(--chart-green);
 }
 .bar-fill .seg-open {
-  background: var(--amber);
+  background: var(--chart-orange);
 }
 
 /* Activity */

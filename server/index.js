@@ -73,14 +73,11 @@ app.use(
   })
 );
 
-app.get('/index.html', (req, res) => {
-  if (req.session.user?.role === 'admin') {
-    return res.redirect('/html/admin.html');
-  }
-
-  res.redirect(HOME_PAGE); // /html/index.html
+app.get('/', (req, res) => {
+  res.redirect(HOME_PAGE);
 });
 
+// Redirects admins away from homepage
 app.get(HOME_PAGE, (req, res, next) => {
   if (req.session.user?.role === 'admin') {
     return res.redirect('/html/admin.html');
