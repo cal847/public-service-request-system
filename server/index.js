@@ -1,3 +1,7 @@
+/**
+ * eEntry point for the server. Sets up the database, runs seed-data.js 
+ * and defines routes
+ */
 const path = require('path');
 const express = require('express');
 const session = require('express-session');

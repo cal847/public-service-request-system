@@ -1,4 +1,6 @@
-// Password strength checker - evaluates strength of password.
+/**
+ * Password strength checker - evaluates strength of password.
+*/
 (function (global) {
   'use strict';
 

@@ -1,3 +1,10 @@
+/**
+ * Admin route. Defines the following API endpoints:
+ * 1. GET api/admin/stats -> computes and returns performance statistics
+ * 2. GET /api/admin/requests?status=&category=&q=&page= -> returns user service requests on the admin dashboard
+ * 3. GET /api/admin/requests/:id -> returns a single request's information
+ * 4. PATCH /api/admin/requests/:id/status -> updates services status and response
+ */
 const express = require('express');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');

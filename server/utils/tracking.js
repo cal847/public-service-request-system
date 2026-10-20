@@ -1,8 +1,11 @@
-// Generates tracking code for tracking service requests
+/**
+ * Generates tracking code for tracking service requests
+*/
 const crypto = require('crypto');
 
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
+// Format: MCG-2026-1A2B3C
 function generateTrackingCode(db, date = new Date()) {
   for (let attempt = 0; attempt < 10; attempt++) {
     let suffix = '';

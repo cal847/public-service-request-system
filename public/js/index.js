@@ -1,3 +1,7 @@
+/**
+ * Resident portal: navigation, accessibility, theme, request submission and tracking.
+ * Handles signed-in request cards, public tracking lookup, and contact/code copy actions.
+ */
 (function () {
   'use strict';
 

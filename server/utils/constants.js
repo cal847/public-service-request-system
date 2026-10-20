@@ -1,3 +1,6 @@
+/**
+ * Defines project constants for consistency across all files
+ */
 const CATEGORIES = ['Streetlight', 'Water', 'Garbage collection', 'Roads', 'Other'];
 const STATUSES = ['Pending', 'In Progress', 'Resolved'];
 

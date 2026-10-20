@@ -28,26 +28,26 @@
   /* ---------- helpers ---------- */
 
   /** Tiny element builder. Strings become text nodes, so nothing is parsed as HTML. */
-  // function h(tag, attrs, ...children) {
-  //   const node = document.createElement(tag);
-  //   for (const [key, value] of Object.entries(attrs || {})) {
-  //     if (value == null || value === false) continue;
-  //     if (key === 'class') node.className = value;
-  //     else if (key === 'style') Object.entries(value).forEach(([p, v]) => node.style.setProperty(p, v));
-  //     else node.setAttribute(key, value === true ? '' : value);
-  //   }
-  //   for (const child of children.flat()) {
-  //     if (child == null || child === false) continue;
-  //     node.append(child);
-  //   }
-  //   return node;
-  // }
+  function h(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(attrs || {})) {
+      if (value == null || value === false) continue;
+      if (key === 'class') node.className = value;
+      else if (key === 'style') Object.entries(value).forEach(([p, v]) => node.style.setProperty(p, v));
+      else node.setAttribute(key, value === true ? '' : value);
+    }
+    for (const child of children.flat()) {
+      if (child == null || child === false) continue;
+      node.append(child);
+    }
+    return node;
+  }
 
   const icon = (name) => h('span', { class: 'material-symbols-outlined icon', 'aria-hidden': 'true' }, name);
   const pill = (status) => h('span', { class: `pill pill-${STATUS_CLASS[status]}` }, status);
   const percent = (part, whole) => (whole ? Math.round((part / whole) * 100) : 0);
 
-  // Sets date format eg Tuesday October
+  // Sets date format eg 20 October 2026
   const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const dateTimeFmt = new Intl.DateTimeFormat('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',

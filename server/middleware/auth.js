@@ -1,4 +1,6 @@
-// Auth middleware. Ensures valid user roles on certain routes.
+/** 
+ * Auth middleware. Ensures valid user roles on certain routes.
+*/
 function requireAuth(req, res, next) {
   if (!req.session.user) return res.status(401).json({ error: 'Please sign in.' });
   next();

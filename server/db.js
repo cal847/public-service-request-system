@@ -1,3 +1,7 @@
+/**
+ * Sets up the database tables and seeds admin if none exists
+ */
+
 const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');

@@ -1,4 +1,6 @@
-// Enforces valid data types and formats
+/**
+ * eNFORCES VALID DATA TYPES AND FORMATS
+ */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const NAME_RE = /^\p{L}[\p{L}\s'.-]{1,79}$/u;
 const ID_RE = /^\d{7,8}$/;

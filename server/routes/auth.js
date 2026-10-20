@@ -1,3 +1,11 @@
+/**
+ * Auth router: it defines the authentication API endpoints. They include:
+ * 1. POST /api/auth/register -> user registration
+ * 2. POST /api/auth/login  -> login endpoint
+ * 3. POST /api/auth/logout -> logs out users
+ * 4. GET /api/auth/me -> shows a citizen's account plus thei service requests
+ */
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
