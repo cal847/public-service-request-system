@@ -1,4 +1,3 @@
-/* Admin dashboard. Loaded after style.css and reuses its tokens + dark mode. */
 :root {
   --surface: #fff;
   --surface-2: #f4f9f6;
@@ -11,15 +10,20 @@
   --danger: #b42318;
 }
 html[data-theme="dark"] {
-  --surface: var(--dm-surface);
-  --surface-2: rgba(255, 255, 255, 0.05);
+  --page-bg: #0a120d;
+  --surface: #121f17;
+  --surface-2: #182820;
   --text-soft: var(--dm-text-soft);
-  --amber: #9b7938;
-  --chart-green: #2cb45984;
-  --chart-orange: #ac713a;
-  --pending-bg: rgba(247, 144, 9, 0.2);   --pending-fg: #fdb022;
-  --progress-bg: rgba(46, 144, 250, 0.2); --progress-fg: #84caff;
+  --green-tint: rgba(124, 201, 156, 0.1);
+  --amber: #c9a066;
+  --chart-green: #2cb4597b;
+  --chart-orange: #d97706a4;
+  --pending-bg: rgba(227, 178, 102, 0.15);   --pending-fg: #fdb022;
+  --progress-bg: rgba(110, 160, 230, 0.15); --progress-fg: #84caff;
   --danger: #ff9b8f;
+}
+html[data-theme="dark"] body {
+  background: var(--page-bg);
 }
 
 /* ---------- Shell ---------- */
