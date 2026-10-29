@@ -10,7 +10,7 @@
   --danger: #b42318;
 }
 html[data-theme="dark"] {
-  --page-bg: #0a120d;
+  --page-bg: #43554a95;
   --surface: #121f17;
   --surface-2: #182820;
   --text-soft: var(--dm-text-soft);
@@ -267,7 +267,7 @@ textarea.control {
   padding: 1.1rem 1.2rem;
   background: var(--surface);
   border: 1px solid var(--green-border);
-  border-radius: 14px;
+  border-radius: 8px;
   box-shadow: 0 2px 10px rgba(33, 99, 62, 0.06);
 }
 .metric-icon {
@@ -309,7 +309,7 @@ textarea.control {
   padding: 1.25rem;
   background: var(--surface);
   border: 1px solid var(--green-border);
-  border-radius: 14px;
+  border-radius: 8px;
   box-shadow: 0 2px 10px rgba(33, 99, 62, 0.06);
 }
 .panel-head {
